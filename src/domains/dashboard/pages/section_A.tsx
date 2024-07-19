@@ -21,6 +21,14 @@ import { setSectionAData } from "../../../slices/sectionASlice";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { Navigate, useNavigate } from "react-router-dom";
 
+export interface ExecutiveOfficerInfo {
+  authorityLim: string;
+  creditMan: string;
+  headOM: string;
+  isCommMember: string;
+  whichComm: string;
+}
+
 const sectionA = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -32,9 +40,18 @@ const sectionA = () => {
   const [open, setOpen] = useState(false);
   const [idNumber, setIdNumber] = useState<number | null | string>("");
 
-  const [isExecutiveOfficer, setIsExecutiveOfficer] = useState<
-    number | null | string
-  >("");
+  const [isExecutiveOfficer, setIsExecutiveOfficer] = useState("");
+
+  const [executiveOfficerInfo, setExecutiveOfficerInfo] =
+    useState<ExecutiveOfficerInfo>({
+      authorityLim: "",
+      creditMan: "",
+      headOM: "",
+      isCommMember: "",
+      whichComm: "",
+    });
+
+  console.log(executiveOfficerInfo, "executiveOfficerInfo");
 
   const handleCLick = async () => {
     try {
@@ -75,197 +92,218 @@ const sectionA = () => {
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        display="flex"
-        sx={{ height: `calc(100% - 55px)` }}
-        flexDirection="column"
-        position="relative"
-      >
-        <StepIndicator currentStep={1} totalSteps={4} path="/" />
+    <>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Box
           display="flex"
+          sx={{ height: `calc(100% - 55px)` }}
           flexDirection="column"
-          flex={1}
-          width={{
-            md: "31rem",
-          }}
-          sx={{
-            maxWidth: { xs: "100%", md: "31rem" },
-            marginX: "auto",
-          }}
+          position="relative"
         >
-          <Typography fontSize="24px" fontWeight={"800"}>
-            Section A :{" "}
-          </Typography>
-
-          <Typography fontSize="12px" fontWeight={"400"} color={"#151515"}>
-            Personal Information
-          </Typography>
-
-          <Box marginTop={"16px"}>
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="name"
-                label="Staff Full Name"
-              />
-            </Box>
-
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="staffId"
-                label="Staff ID Number"
-                value={idNumber!}
-              />
-            </Box>
-
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="NRICNumber"
-                label="NRIC Number"
-              />
-              <Typography
-                sx={{ color: "#8A8A8C" }}
-                fontWeight={"600"}
-                fontSize={"12px"}
-              >
-                Enter the NRIC Number without space or dash
-              </Typography>
-            </Box>
-
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="passportNumber"
-                label="Passport Number(Non Malaysian)"
-              />
-            </Box>
-
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="department"
-                label="Unit / Department"
-              />
-            </Box>
-
-            <Box padding={"16px"}>
-              <TextFieldComponent
-                autoFocus
-                autoComplete="off"
-                name="position"
-                label="Position / Title"
-              />
-            </Box>
-
-            <Box padding={"16px"}>
-              <FormControl variant="standard" sx={{ width: "100%" }}>
-                <InputLabel id="executiveOfficer">Executive Officer</InputLabel>
-                <Select
-                  labelId="executiveOfficer"
-                  id="executiveOfficer"
-                  value={isExecutiveOfficer}
-                  onChange={(e: any) => {
-                    if (e?.target?.value === "Yes") {
-                      setOpen(true);
-                    }
-                  }}
-                  label="Age"
-                  sx={{ width: "100%" }}
-                  fullWidth
-                >
-                  <MenuItem value={"Yes"}>Yes</MenuItem>
-                  <MenuItem value={"No"}>No</MenuItem>
-                </Select>
-              </FormControl>
-              <Typography
-                sx={{ color: "#8A8A8C" }}
-                fontWeight={"600"}
-                fontSize={"12px"}
-              >
-                Members or management having authority and responsibility for
-                planning, directing and/or controlling the activities of the
-                Bank
-              </Typography>
-            </Box>
-
-            <InfoBox />
-          </Box>
-        </Box>
-        <Box
-          bottom={20}
-          sx={{ width: "100%" }}
-          // height="80px"
-          borderTop="1px solid #CDCDCD"
-        >
+          <StepIndicator currentStep={1} totalSteps={4} path="/" />
           <Box
-            height={{
-              md: "max-content",
-            }}
             display="flex"
-            padding="16px"
-            flex={{ xs: 1 }}
+            flexDirection="column"
+            flex={1}
+            width={{
+              md: "31rem",
+            }}
             sx={{
-              alignItems: {
-                xs: "flex-end",
-                md: "center",
-                lg: "flex-start",
-              },
-              justifyContent: {
-                xs: "center",
-                md: "flex-start",
-                lg: "flex-start",
-              },
-              width: "100%",
+              maxWidth: { xs: "100%", md: "31rem" },
+              marginX: "auto",
             }}
           >
-            <Box
-              display="flex"
-              sx={{
-                flex: 1,
+            <Typography fontSize="24px" fontWeight={"800"}>
+              Section A :{" "}
+            </Typography>
 
-                flexDirection: {
-                  // md: "row",
-                  xs: "column",
+            <Typography fontSize="12px" fontWeight={"400"} color={"#151515"}>
+              Personal Information
+            </Typography>
+
+            <Box marginTop={"16px"}>
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="name"
+                  label="Staff Full Name"
+                />
+              </Box>
+
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="staffId"
+                  label="Staff ID Number"
+                  value={idNumber!}
+                />
+              </Box>
+
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="NRICNumber"
+                  label="NRIC Number"
+                />
+                <Typography
+                  sx={{ color: "#8A8A8C" }}
+                  fontWeight={"600"}
+                  fontSize={"12px"}
+                >
+                  Enter the NRIC Number without space or dash
+                </Typography>
+              </Box>
+
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="passportNumber"
+                  label="Passport Number(Non Malaysian)"
+                />
+              </Box>
+
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="department"
+                  label="Unit / Department"
+                />
+              </Box>
+
+              <Box padding={"16px"}>
+                <TextFieldComponent
+                  autoFocus
+                  autoComplete="off"
+                  name="position"
+                  label="Position / Title"
+                />
+              </Box>
+
+              <Box padding={"16px"}>
+                <FormControl variant="standard" sx={{ width: "100%" }}>
+                  <InputLabel id="executiveOfficer">
+                    Executive Officer
+                  </InputLabel>
+                  <Select
+                    labelId="executiveOfficer"
+                    id="executiveOfficer"
+                    value={isExecutiveOfficer}
+                    onChange={(e: any) => {
+                      if (e?.target?.value === "Yes") {
+                        setOpen(true);
+                      } else {
+                        setExecutiveOfficerInfo({
+                          authorityLim: "",
+                          creditMan: "",
+                          headOM: "",
+                          isCommMember: "",
+                          whichComm: "",
+                        });
+                      }
+                      setIsExecutiveOfficer(e?.target?.value);
+                    }}
+                    label="Age"
+                    sx={{ width: "100%" }}
+                    fullWidth
+                  >
+                    <MenuItem value={"Yes"}>Yes</MenuItem>
+                    <MenuItem value={"No"}>No</MenuItem>
+                  </Select>
+                </FormControl>
+                <Typography
+                  sx={{ color: "#8A8A8C" }}
+                  fontWeight={"600"}
+                  fontSize={"12px"}
+                >
+                  Members or management having authority and responsibility for
+                  planning, directing and/or controlling the activities of the
+                  Bank
+                </Typography>
+              </Box>
+
+              {executiveOfficerInfo.isCommMember !== "" &&
+                isExecutiveOfficer !== "" &&
+                isExecutiveOfficer !== "No" && (
+                  <InfoBox
+                    executiveOfficerInfo={executiveOfficerInfo}
+                    setOpen={setOpen}
+                  />
+                )}
+            </Box>
+          </Box>
+          <Box
+            bottom={20}
+            sx={{ width: "100%" }}
+            // height="80px"
+            borderTop="1px solid #CDCDCD"
+          >
+            <Box
+              height={{
+                md: "max-content",
+              }}
+              display="flex"
+              padding="16px"
+              flex={{ xs: 1 }}
+              sx={{
+                alignItems: {
+                  xs: "flex-end",
+                  md: "center",
+                  lg: "flex-start",
                 },
+                justifyContent: {
+                  xs: "center",
+                  md: "flex-start",
+                  lg: "flex-start",
+                },
+                width: "100%",
               }}
             >
-              <Button
+              <Box
+                display="flex"
                 sx={{
-                  marginTop: 1,
-                  width: {
-                    xs: "100%",
-                    sm: "max-content",
-                    alignSelf: "flex-end",
+                  flex: 1,
+
+                  flexDirection: {
+                    // md: "row",
+                    xs: "column",
                   },
                 }}
-                variant="contained"
-                size="large"
-                btnText="Continue"
-                fullWidth
-              />
-            </Box>
+              >
+                <Button
+                  sx={{
+                    marginTop: 1,
+                    width: {
+                      xs: "100%",
+                      sm: "max-content",
+                      alignSelf: "flex-end",
+                    },
+                  }}
+                  variant="contained"
+                  size="large"
+                  btnText="Continue"
+                  fullWidth
+                />
+              </Box>
 
-            <Box sx={{ height: "auto" }}></Box>
+              <Box sx={{ height: "auto" }}></Box>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </FormProvider>
       <AddNewAddressDrawer
         open={open}
         setOpen={setOpen}
         handleToggleClick={handleToggleClick}
-        // newAddress={newAddress}
-        // setNewAddress={setNewAddress}
+        executiveOfficerInfo={executiveOfficerInfo}
+        setExecutiveOfficerInfo={setExecutiveOfficerInfo}
+        setIsExecutiveOfficer={setIsExecutiveOfficer}
       />
-    </FormProvider>
+    </>
   );
 };
 export default sectionA;

@@ -1,7 +1,4 @@
-import React, { ReactNode } from "react";
-import Button from "../../../../components/Button";
-import SelectInputComponent from "../../../../components/SelectInputComponent";
-import TextFieldComponent from "../../../../components/TextFieldComponent";
+import React, { useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -11,14 +8,20 @@ import {
 } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import CloseIcon from "@mui/icons-material/Close";
-import { Form, Formik } from "formik";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import Button from "../../../../components/Button";
+import SelectInputComponent from "../../../../components/SelectInputComponent";
+import TextFieldComponent from "../../../../components/TextFieldComponent";
+import FormProvider from "../../../../components/hook-form/FormProvider";
+import { Controller, useForm } from "react-hook-form";
+import { ExecutiveOfficerInfo } from "../section_A";
 
 type NewAddressType = {
   isCommMember: string;
   authorityLim?: string;
   whichComm?: string;
-  creditMan?: string;
+  creditMan: string;
   headOM: string;
 };
 
@@ -26,26 +29,24 @@ type NewAddressProps = {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   handleToggleClick?: () => void;
-  newAddress?: NewAddressType;
-  setNewAddress?: React.Dispatch<
-    React.SetStateAction<{
-      isCommMember: string;
-      authorityLim?: string;
-      whichComm?: string;
-      creditMan?: string;
-      headOM: string;
-    }>
+  executiveOfficerInfo?: ExecutiveOfficerInfo;
+  setExecutiveOfficerInfo: React.Dispatch<
+    React.SetStateAction<ExecutiveOfficerInfo>
   >;
+  setIsExecutiveOfficer: any;
 };
 
 const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
   open,
   setOpen,
   handleToggleClick,
-  newAddress,
-  setNewAddress,
+  setExecutiveOfficerInfo,
+  executiveOfficerInfo,
+  setIsExecutiveOfficer,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
+
+  console.log(executiveOfficerInfo, "Inside");
 
   const toggleDrawer =
     (openToggle: boolean) =>
@@ -68,196 +69,208 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
     headOM: Yup.string().required("Select a State"),
   });
 
-  const inputValue = () => (
-    <Box
-      sx={{
-        width: setSizeBanner ? 448 : "100vw",
-        display: "flex",
-        flexDirection: "column",
-      }}
-      role="presentation"
-      onKeyDown={toggleDrawer(false)}
-      height="100vh"
-    >
-      <Box paddingX="30px" paddingY="16px" display="flex" flexDirection="row">
-        <IconButton
-          style={{
-            position: "absolute",
-            top: "1%",
-            right: "10%",
-          }}
-          edge="end"
-          color="inherit"
-          aria-label="close"
-          onClick={toggleDrawer(false)}
-        >
-          <Tooltip title="Close">
-            <CloseIcon sx={{ color: "Grey" }} />
-          </Tooltip>
-        </IconButton>
-      </Box>
-      <Box paddingX="30px" paddingY="16px" display="flex" flexDirection="row">
-        <Typography
-          sx={{ fontSize: "24px", fontWeight: "800" }}
-          height="max-content"
-        >
-          Additional Informations
-        </Typography>
-      </Box>
-      <Formik
-        initialValues={{
-          isCommMember: newAddress?.isCommMember || "",
-          whichComm: newAddress?.whichComm || "",
-          authorityLim: newAddress?.authorityLim || "",
-          creditMan: newAddress?.creditMan || "",
-          headOM: newAddress?.headOM || "",
-        }}
-        enableReinitialize
-        validationSchema={addressSchema}
-        onSubmit={async (values: any, { resetForm }: any) => {
-          console.log(values, "///");
+  const methods = useForm({
+    defaultValues: {
+      isCommMember: executiveOfficerInfo?.isCommMember ?? "",
+      whichComm: executiveOfficerInfo?.whichComm ?? "",
+      authorityLim: executiveOfficerInfo?.authorityLim ?? "",
+      creditMan: executiveOfficerInfo?.creditMan ?? "",
+      headOM: executiveOfficerInfo?.headOM ?? "",
+    },
+    resolver: yupResolver(addressSchema),
+  });
 
-          setNewAddress?.({
-            ...values,
-          });
-          setOpen?.(false);
-          toggleDrawer(false);
-        }}
+  const {
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = methods;
+
+  const values = watch();
+  console.log(values, "values");
+
+  useEffect(() => {
+    if (
+      executiveOfficerInfo?.isCommMember === "" &&
+      executiveOfficerInfo?.authorityLim === ""
+    ) {
+      reset();
+    }
+  }, [executiveOfficerInfo]);
+
+  const onSubmit = (values: any) => {
+    setExecutiveOfficerInfo(values);
+    console.log(values, "///");
+    setOpen?.(false);
+    toggleDrawer(false);
+  };
+
+  return (
+    <div key="rightDrawer">
+      <SwipeableDrawer
+        open={open}
+        anchor="right"
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
       >
-        {({
-          handleSubmit,
-          values,
-          handleChange,
-          errors,
-          touched,
-          handleBlur,
-          isValid,
-          dirty,
-        }: any) => (
-          <Form onSubmit={handleSubmit}>
+        <Box
+          sx={{
+            width: setSizeBanner ? 448 : "100vw",
+            display: "flex",
+            flexDirection: "column",
+          }}
+          role="presentation"
+          onKeyDown={toggleDrawer(false)}
+          height="100vh"
+        >
+          <Box
+            paddingX="30px"
+            paddingY="16px"
+            display="flex"
+            flexDirection="row"
+          >
+            <IconButton
+              style={{
+                position: "absolute",
+                top: "1%",
+                right: "10%",
+              }}
+              edge="end"
+              color="inherit"
+              aria-label="close"
+              onClick={toggleDrawer(false)}
+            >
+              <Tooltip
+                title="Close"
+                onClick={() => {
+                  setIsExecutiveOfficer("No");
+                }}
+              >
+                <CloseIcon sx={{ color: "Grey" }} />
+              </Tooltip>
+            </IconButton>
+          </Box>
+          <Box
+            paddingX="30px"
+            paddingY="16px"
+            display="flex"
+            flexDirection="row"
+          >
+            <Typography
+              sx={{ fontSize: "24px", fontWeight: "800" }}
+              height="max-content"
+            >
+              Additional Informations
+            </Typography>
+          </Box>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Box paddingX="30px" paddingY="16px">
-              <SelectInputComponent
-                label="Are you a member Committee of Bank?"
+              <Controller
                 name="isCommMember"
-                options={[
-                  { label: "Yes", value: "Yes" },
-                  { label: "No", value: "No" },
-                ]}
-                onChange={handleChange}
-                value={values.isCommMember}
-                fullWidth
+                control={control}
+                render={({ field }) => (
+                  <SelectInputComponent
+                    label="Are you a member Committee of Bank?"
+                    options={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    {...field}
+                    fullWidth
+                  />
+                )}
               />
               <Typography sx={{ color: "red" }}>
-                {
-                  (errors.isCommMember && touched.isCommMember
-                    ? errors.isCommMember
-                    : null) as ReactNode
-                }
+                {errors.isCommMember?.message}
               </Typography>
             </Box>
 
             {values.isCommMember === "Yes" && (
               <Box paddingX="30px" paddingY="16px">
-                <SelectInputComponent
-                  label="If Yes, Please state which Committee"
+                <Controller
                   name="whichComm"
-                  options={[
-                    { label: "MRCC", value: "MRCC" },
-                    { label: "BRCC", value: "BRCC" },
-                    { label: "ALCO", value: "ALCO" },
-                  ]}
-                  onChange={handleChange}
-                  value={values.whichComm}
-                  fullWidth
+                  control={control}
+                  render={({ field }) => (
+                    <SelectInputComponent
+                      label="If Yes, Please state which Committee"
+                      options={[
+                        { label: "MRCC", value: "MRCC" },
+                        { label: "BRCC", value: "BRCC" },
+                        { label: "ALCO", value: "ALCO" },
+                      ]}
+                      {...field}
+                      fullWidth
+                    />
+                  )}
                 />
                 <Typography sx={{ color: "red" }}>
-                  {
-                    (errors.isCommMember && touched.isCommMember
-                      ? errors.isCommMember
-                      : null) as ReactNode
-                  }
+                  {errors.whichComm?.message}
                 </Typography>
               </Box>
             )}
 
             <Box paddingX="30px" paddingY="16px">
-              <SelectInputComponent
-                label="Officer - Authority Limit"
+              <Controller
                 name="authorityLim"
-                options={[
-                  {
-                    label: "Yes",
-                    value: "Yes",
-                  },
-                  {
-                    label: "No",
-                    value: "No",
-                  },
-                ]}
-                onChange={handleChange}
-                value={values.authorityLim}
-                fullWidth
+                control={control}
+                render={({ field }) => (
+                  <SelectInputComponent
+                    label="Officer - Authority Limit"
+                    options={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    {...field}
+                    fullWidth
+                  />
+                )}
               />
               <Typography sx={{ color: "red" }}>
-                {
-                  (errors.city && touched.city
-                    ? errors.city
-                    : null) as ReactNode
-                }
+                {errors.authorityLim?.message}
               </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
-              <SelectInputComponent
-                label="Officer - Credit Manager"
+              <Controller
                 name="creditMan"
-                options={[
-                  {
-                    label: "Yes",
-                    value: "Yes",
-                  },
-                  {
-                    label: "No",
-                    value: "No",
-                  },
-                ]}
-                onChange={handleChange}
-                value={values.creditMan}
-                fullWidth
+                control={control}
+                render={({ field }) => (
+                  <SelectInputComponent
+                    label="Officer - Credit Manager"
+                    options={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    {...field}
+                    fullWidth
+                  />
+                )}
               />
               <Typography sx={{ color: "red" }}>
-                {
-                  (errors.creditMan && touched.creditMan
-                    ? errors.creditMan
-                    : null) as ReactNode
-                }
+                {errors.creditMan?.message}
               </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
-              <SelectInputComponent
-                label="Officer - Head of Marketing Staff, Sales Staff, Frontliner"
+              <Controller
                 name="headOM"
-                options={[
-                  {
-                    label: "Yes",
-                    value: "Yes",
-                  },
-                  {
-                    label: "No",
-                    value: "No",
-                  },
-                ]}
-                onChange={handleChange}
-                value={values.headOM}
-                fullWidth
+                control={control}
+                render={({ field }) => (
+                  <SelectInputComponent
+                    label="Officer - Head of Marketing Staff, Sales Staff, Frontliner"
+                    options={[
+                      { label: "Yes", value: "Yes" },
+                      { label: "No", value: "No" },
+                    ]}
+                    {...field}
+                    fullWidth
+                  />
+                )}
               />
               <Typography sx={{ color: "red" }}>
-                {
-                  (errors.headOM && touched.headOM
-                    ? errors.headOM
-                    : null) as ReactNode
-                }
+                {errors.headOM?.message}
               </Typography>
             </Box>
 
@@ -285,25 +298,10 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 size="large"
                 fullWidth={!setSizeBanner}
                 variant="contained"
-                onClick={handleSubmit}
-                disabled={!isValid || !dirty}
               />
             </Box>
-          </Form>
-        )}
-      </Formik>
-    </Box>
-  );
-
-  return (
-    <div key="rightDrawer">
-      <SwipeableDrawer
-        open={open}
-        anchor="right"
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-      >
-        {inputValue()}
+          </FormProvider>
+        </Box>
       </SwipeableDrawer>
     </div>
   );
