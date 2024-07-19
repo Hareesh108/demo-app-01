@@ -26,7 +26,6 @@ const sectionA = () => {
     (state) => state.reducer.sectionA
   );
 
-  const [currentStep, setCurrentStep] = useState(1);
   const [open, setOpen] = useState(false);
   const [idNumber, setIdNumber] = useState<number | null | string>("");
 
@@ -78,7 +77,7 @@ const sectionA = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={currentStep} totalSteps={4} />
+        <StepIndicator currentStep={1} totalSteps={4} />
         <Box
           display="flex"
           flexDirection="column"

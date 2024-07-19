@@ -16,7 +16,6 @@ type newDeclarationForm = {
 };
 
 const sectionC = () => {
-  const [currentStep, setCurrentStep] = useState(3);
   const [open, setOpen] = useState(false);
   const [declaration, setDeclaration] = useState<newDeclarationForm[]>([]);
   const [currIndex, setCurrIndex] = useState<number>();
@@ -54,7 +53,7 @@ const sectionC = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={currentStep} totalSteps={4} />
+        <StepIndicator currentStep={3} totalSteps={4} />
         <Box
           display="flex"
           flexDirection="column"
@@ -241,7 +240,7 @@ const sectionC = () => {
           </Box>
         </Box>
       </Box>
-      <FamilyInfoDrawer
+      {/* <FamilyInfoDrawer
         open={open}
         setOpen={setOpen}
         currentForm={currForm}
@@ -253,7 +252,7 @@ const sectionC = () => {
           setDeclaration([...declaration, val]);
         }}
         updateConfig={updateForm}
-      />
+      /> */}
     </>
   );
 };

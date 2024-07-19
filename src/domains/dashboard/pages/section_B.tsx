@@ -16,7 +16,6 @@ type newDeclarationForm = {
 };
 
 const sectionB = () => {
-  const [currentStep, setCurrentStep] = useState(2);
   const [open, setOpen] = useState(false);
   const [declaration, setDeclaration] = useState<newDeclarationForm[]>([]);
   const [currIndex, setCurrIndex] = useState<number>();
@@ -54,7 +53,7 @@ const sectionB = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={currentStep} totalSteps={4} />
+        <StepIndicator currentStep={2} totalSteps={4} />
         <Box
           display="flex"
           flexDirection="column"
@@ -240,7 +239,7 @@ const sectionB = () => {
           </Box>
         </Box>
       </Box>
-      <DeclarationForm
+      {/* <DeclarationForm
         open={open}
         setOpen={setOpen}
         currentForm={currForm}
@@ -252,7 +251,7 @@ const sectionB = () => {
           setDeclaration([...declaration, val]);
         }}
         updateConfig={updateForm}
-      />
+      /> */}
     </>
   );
 };

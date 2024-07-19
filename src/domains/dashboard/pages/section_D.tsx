@@ -16,7 +16,6 @@ type newDeclarationForm = {
 };
 
 const sectionD = () => {
-  const [currentStep, setCurrentStep] = useState(4);
   const [declare, setDeclare] = useState<boolean>(false);
   const [understand, setUnderstand] = useState<boolean>(false);
   const [infoDeclare, setInfoDeclare] = useState<boolean>(false);
@@ -29,7 +28,7 @@ const sectionD = () => {
       flexDirection="column"
       position="relative"
     >
-      <StepIndicator currentStep={currentStep} totalSteps={4} />
+      <StepIndicator currentStep={4} totalSteps={4} />
       <Box
         display="flex"
         flexDirection="column"

@@ -44,7 +44,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
   isEdit,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
-  
+
   const toggleDrawer =
     (openToggle: boolean) =>
     // eslint-disable-next-line consistent-return
@@ -144,9 +144,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 label="Company Name connected to you (if any)"
                 id="cmpnyName"
                 name="cmpnyName"
-                onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.cmpnyName}
               />
               <Typography sx={{ color: "red" }}>
                 {
@@ -162,9 +160,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 label="Business Registration Number"
                 id="cmpnyName"
                 name="buisnRegNo"
-                onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.buisnRegNo}
               />
               <Typography sx={{ color: "red" }}>
                 {

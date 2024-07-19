@@ -62,7 +62,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                       navigatePath: pathname,
                     },
                   })
-                : navigate(-1);
+                : navigate(DOMAIN_PATHS.sectionA);
             }}
           />
         )}
