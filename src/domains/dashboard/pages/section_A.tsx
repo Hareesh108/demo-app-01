@@ -19,9 +19,11 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setSectionAData } from "../../../slices/sectionASlice";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const sectionA = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { NRICNumber, name, staffId } = useAppSelector(
     (state) => state.reducer.sectionA
@@ -69,6 +71,7 @@ const sectionA = () => {
   const onSubmit = async (data: any) => {
     console.log(data, "data");
     dispatch(setSectionAData(data));
+    navigate("/sectionB");
   };
 
   return (
@@ -79,7 +82,7 @@ const sectionA = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={1} totalSteps={4} />
+        <StepIndicator currentStep={1} totalSteps={4} path="/" />
         <Box
           display="flex"
           flexDirection="column"

@@ -36,7 +36,7 @@ const sectionD = () => {
       flexDirection="column"
       position="relative"
     >
-      <StepIndicator currentStep={4} totalSteps={4} />
+      <StepIndicator currentStep={4} totalSteps={4} path="/sectionC" />
 
       <Box
         display="flex"

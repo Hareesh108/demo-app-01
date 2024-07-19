@@ -7,6 +7,7 @@ import PersonalDetailsBox from "./Component/PersonalDetailsBox";
 import DeclarationForm from "./Component/DeclarationForm";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { useAppDispatch } from "../../../hooks/hooks";
+import { useNavigate } from "react-router-dom";
 
 type newDeclarationForm = {
   id?: string;
@@ -25,6 +26,7 @@ const sectionB = () => {
   const [edit, setEdit] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const updateForm = (data: any) => {
     setEdit(false);
@@ -61,7 +63,7 @@ const sectionB = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={2} totalSteps={4} />
+        <StepIndicator currentStep={2} totalSteps={4} path="/" />
         <Box
           display="flex"
           flexDirection="column"
@@ -185,7 +187,9 @@ const sectionB = () => {
                   variant="contained"
                   size="large"
                   btnText="None to Declare"
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/sectionC");
+                  }}
                   fullWidth
                 />
               </Box>

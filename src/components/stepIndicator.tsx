@@ -10,6 +10,7 @@ type StepIndicatorProps = {
   totalSteps?: number;
   hideBack?: boolean;
   hideStep?: boolean;
+  path: string;
 };
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({
@@ -17,6 +18,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   totalSteps = 0,
   hideBack = false,
   hideStep = false,
+  path,
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -62,7 +64,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                       navigatePath: pathname,
                     },
                   })
-                : navigate(DOMAIN_PATHS.sectionA);
+                : navigate(path);
             }}
           />
         )}

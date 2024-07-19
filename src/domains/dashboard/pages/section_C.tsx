@@ -7,6 +7,7 @@ import FamilyInfoDrawer from "./Component/FamilyForm";
 import FamilyBox from "./Component/FamilyBox";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
+import { useNavigate } from "react-router-dom";
 
 type newDeclarationForm = {
   id?: string;
@@ -25,6 +26,7 @@ const sectionC = () => {
   const [edit, setEdit] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const updateForm = (data: any) => {
     setEdit(false);
@@ -61,7 +63,7 @@ const sectionC = () => {
         flexDirection="column"
         position="relative"
       >
-        <StepIndicator currentStep={3} totalSteps={4} />
+        <StepIndicator currentStep={3} totalSteps={4} path="/sectionB" />
         <Box
           display="flex"
           flexDirection="column"
@@ -186,7 +188,9 @@ const sectionC = () => {
                   variant="contained"
                   size="large"
                   btnText="None to Declare"
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate("/sectionD");
+                  }}
                   fullWidth
                 />
               </Box>
