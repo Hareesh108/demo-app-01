@@ -1,0 +1,9 @@
+// color palettes
+@import "./colors";
+
+:export {
+  colorPrimary: $color-boost-red;
+  colorSecondary: $color-fade-green;
+  colorDanger: $color-fade-red;
+  fontFamily: "Maven Pro", sans-serif;
+}
