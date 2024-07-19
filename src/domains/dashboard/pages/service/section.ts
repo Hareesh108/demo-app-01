@@ -5,7 +5,7 @@ import {
   ApiServerClient,
 } from "../../../../services/ApiClient";
 
-const basePath = "http://dev-int.axr-engineering.net";
+const basePath = "http://test-int.axr-engineering.net";
 
 export const getShareholderTypes = async () => {
   //   const uri = `${basePath}/connected-party/v1/shareholderTypes`;
