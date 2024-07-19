@@ -5,7 +5,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 type OutletStepsProps = {
-  OutletStepsProps?:any
+  OutletStepsProps?: any;
 };
 
 const OutletSteps: React.FC<OutletStepsProps> = () => {

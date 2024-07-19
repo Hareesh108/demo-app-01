@@ -60,7 +60,7 @@ const KycMilestoneChecklist = ({ children }: any) => {
             width: "90%",
           }}
         >
-          <Typography fontSize="20px" fontWeight="800" fontFamily= "Maven Pro">
+          <Typography fontSize="20px" fontWeight="800" fontFamily="Maven Pro">
             Boost Bank CP Declaration Form
           </Typography>
         </Box>
@@ -125,7 +125,7 @@ const KycMilestoneChecklist = ({ children }: any) => {
               fontWeight="800"
               fontSize="20px"
               lineHeight="24px"
-              fontFamily= "Maven Pro"
+              fontFamily="Maven Pro"
             >
               Boost Bank CP Declaration Form
             </Typography>

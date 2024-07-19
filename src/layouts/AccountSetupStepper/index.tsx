@@ -147,7 +147,7 @@ const AccountSetupStepper: React.FC<StepperInputProps> = ({
   return (
     <Box sx={{ maxWidth: 300, maxHeight: 600, width: 300 }}>
       <Stepper
-        activeStep={2}
+        activeStep={0}
         orientation="vertical"
         connector={<ColorlibConnector />}
       >
