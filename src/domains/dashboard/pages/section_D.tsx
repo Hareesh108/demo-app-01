@@ -67,9 +67,9 @@ const sectionD = () => {
         },
       ],
       relatives: null,
-      createDeclaration: true,
-      updateDeclaration: true,
-      confirmDeclaration: true,
+      createDeclaration: declare,
+      updateDeclaration: understand,
+      confirmDeclaration: infoDeclare,
     };
 
     try {
