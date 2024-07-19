@@ -5,6 +5,8 @@ import StepIndicator from "../../../components/stepIndicator";
 import Button from "../../../components/Button";
 import FamilyInfoDrawer from "./Component/FamilyForm";
 import FamilyBox from "./Component/FamilyBox";
+import { useAppDispatch } from "../../../hooks/hooks";
+import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 
 type newDeclarationForm = {
   id?: string;
@@ -21,6 +23,8 @@ const sectionC = () => {
   const [currIndex, setCurrIndex] = useState<number>();
   const [currForm, setCurrForm] = useState<newDeclarationForm | {}>({});
   const [edit, setEdit] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const updateForm = (data: any) => {
     setEdit(false);
@@ -44,6 +48,10 @@ const sectionC = () => {
 
     setDeclaration(updatedItems);
   };
+
+  useEffect(() => {
+    dispatch(setLeftBarProgress({ step: 2 }));
+  }, []);
 
   return (
     <>

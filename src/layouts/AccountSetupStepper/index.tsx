@@ -51,8 +51,8 @@ const AccountSetupStepper: React.FC<StepperInputProps> = ({
   nxtButton,
   onClick,
 }) => {
-  const { activeStep, reviewing } = useAppSelector(
-    (state: any) => state.reducer.stepperChecklist
+  const { reviewing, step } = useAppSelector(
+    (state) => state.reducer.stepperChecklist
   );
 
   const steps = [
@@ -147,7 +147,7 @@ const AccountSetupStepper: React.FC<StepperInputProps> = ({
   return (
     <Box sx={{ maxWidth: 300, maxHeight: 600, width: 300 }}>
       <Stepper
-        activeStep={0}
+        activeStep={step}
         orientation="vertical"
         connector={<ColorlibConnector />}
       >

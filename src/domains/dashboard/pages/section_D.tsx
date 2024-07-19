@@ -5,6 +5,8 @@ import Button from "../../../components/Button";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
+import { useAppDispatch } from "../../../hooks/hooks";
 
 type newDeclarationForm = {
   id?: string;
@@ -21,6 +23,12 @@ const sectionD = () => {
   const [infoDeclare, setInfoDeclare] = useState<boolean>(false);
   const [allDeclare, setAllDeclare] = useState<boolean>(false);
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setLeftBarProgress({ step: 3 }));
+  }, []);
+
   return (
     <Box
       display="flex"
@@ -29,6 +37,7 @@ const sectionD = () => {
       position="relative"
     >
       <StepIndicator currentStep={4} totalSteps={4} />
+
       <Box
         display="flex"
         flexDirection="column"

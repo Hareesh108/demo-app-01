@@ -5,6 +5,8 @@ import StepIndicator from "../../../components/stepIndicator";
 import Button from "../../../components/Button";
 import PersonalDetailsBox from "./Component/PersonalDetailsBox";
 import DeclarationForm from "./Component/DeclarationForm";
+import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
+import { useAppDispatch } from "../../../hooks/hooks";
 
 type newDeclarationForm = {
   id?: string;
@@ -21,6 +23,8 @@ const sectionB = () => {
   const [currIndex, setCurrIndex] = useState<number>();
   const [currForm, setCurrForm] = useState<newDeclarationForm | {}>({});
   const [edit, setEdit] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const updateForm = (data: any) => {
     setEdit(false);
@@ -44,6 +48,10 @@ const sectionB = () => {
 
     setDeclaration(updatedItems);
   };
+
+  useEffect(() => {
+    dispatch(setLeftBarProgress({ step: 1 }));
+  }, []);
 
   return (
     <>

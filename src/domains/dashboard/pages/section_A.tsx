@@ -18,6 +18,7 @@ import FormProvider from "../../../components/hook-form/FormProvider";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setSectionAData } from "../../../slices/sectionASlice";
+import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 
 const sectionA = () => {
   const dispatch = useAppDispatch();
@@ -44,6 +45,7 @@ const sectionA = () => {
 
   useEffect(() => {
     handleCLick();
+    dispatch(setLeftBarProgress({ step: 0 }));
   }, []);
 
   const handleToggleClick = () => {
