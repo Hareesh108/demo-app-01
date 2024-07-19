@@ -16,69 +16,58 @@ import InfoBox from "./Component/InfoBox";
 import { getShareholderTypes } from "./service/section";
 import FormProvider from "../../../components/hook-form/FormProvider";
 import { useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setSectionAData } from "../../../slices/sectionASlice";
 
 const sectionA = () => {
+  const dispatch = useAppDispatch();
+
+  const { NRICNumber, name, staffId } = useAppSelector(
+    (state) => state.reducer.sectionA
+  );
+
   const [currentStep, setCurrentStep] = useState(1);
   const [open, setOpen] = useState(false);
-  const [fullName, setFullName] = useState<number | null | string>("");
   const [idNumber, setIdNumber] = useState<number | null | string>("");
-  const [nricNumber, setNRICNumber] = useState<number | null | string>("");
-  const [passportNumber, setPassportNumber] = useState<number | null | string>(
-    ""
-  );
-  const [department, setDepartment] = useState<number | null | string>("");
-  const [position, setPosition] = useState<number | null | string>("");
+
   const [isExecutiveOfficer, setIsExecutiveOfficer] = useState<
     number | null | string
   >("");
-
-  useEffect(() => {
-    handleCLick();
-  }, []);
 
   const handleCLick = async () => {
     try {
       const resp = await getShareholderTypes();
       console.log(resp, "resp");
-    } catch (err: any) {}
-  };
-
-  const handleChange = (event: any, type: string) => {
-    switch (type) {
-      case "name":
-        setFullName(event.target.value as string);
-        break;
-      case "staffId":
-        setIdNumber(event.target.value as string);
-        break;
-      case "NRICNumber":
-        setNRICNumber(event.target.value as string);
-        break;
-      case "passportNumber":
-        setPassportNumber(event.target.value as string);
-        break;
-      case "department":
-        setDepartment(event.target.value as string);
-        break;
-      case "position":
-        setPosition(event.target.value as string);
-        break;
-      case "executiveOfficer":
-        setIsExecutiveOfficer(event.target.value as string);
-        break;
-      default:
+    } catch (err: any) {
+      console.log(err, "err");
     }
   };
+
+  useEffect(() => {
+    handleCLick();
+  }, []);
 
   const handleToggleClick = () => {
     setOpen(true);
   };
 
-  const methods = useForm({ defaultValues: {} });
+  const methods = useForm({
+    defaultValues: {
+      NRICNumber: "",
+      department: "",
+      name: "",
+      passportNumber: "",
+      position: "",
+      staffId: "",
+    },
+  });
   const { handleSubmit } = methods;
+
+  console.log(NRICNumber, name, staffId, " NRICNumber,name,staffId ");
 
   const onSubmit = async (data: any) => {
     console.log(data, "data");
+    dispatch(setSectionAData(data));
   };
 
   return (
@@ -117,8 +106,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="name"
                 label="Staff Full Name"
-                onChange={(e: any) => handleChange(e, "name")}
-                value={fullName!}
               />
             </Box>
 
@@ -128,7 +115,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="staffId"
                 label="Staff ID Number"
-                onChange={(e: any) => handleChange(e, "staffId")}
                 value={idNumber!}
               />
             </Box>
@@ -139,8 +125,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="NRICNumber"
                 label="NRIC Number"
-                onChange={(e: any) => handleChange(e, "NRICNumber")}
-                value={nricNumber!}
               />
               <Typography
                 sx={{ color: "#8A8A8C" }}
@@ -157,8 +141,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="passportNumber"
                 label="Passport Number(Non Malaysian)"
-                onChange={(e: any) => handleChange(e, "passportNumber")}
-                value={passportNumber!}
               />
             </Box>
 
@@ -168,8 +150,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="department"
                 label="Unit / Department"
-                onChange={(e: any) => handleChange(e, "department")}
-                value={department!}
               />
             </Box>
 
@@ -179,8 +159,6 @@ const sectionA = () => {
                 autoComplete="off"
                 name="position"
                 label="Position / Title"
-                onChange={(e: any) => handleChange(e, "position")}
-                value={position!}
               />
             </Box>
 
@@ -195,7 +173,6 @@ const sectionA = () => {
                     if (e?.target?.value === "Yes") {
                       setOpen(true);
                     }
-                    handleChange(e, "executiveOfficer");
                   }}
                   label="Age"
                   sx={{ width: "100%" }}

@@ -70,6 +70,7 @@ const TextFieldComponent: React.FC<InputFieldProps & TextFieldProps> = ({
           </InputLabel>
 
           <Input
+            {...field}
             onClick={onClick}
             sx={{
               color: "#231F20",
@@ -85,8 +86,11 @@ const TextFieldComponent: React.FC<InputFieldProps & TextFieldProps> = ({
             name={name}
             id={`standard-${name}`}
             inputProps={inputProps && { ...inputProps }}
-            onChange={onChange}
-            value={value}
+            value={
+              typeof field.value === "number" && field.value === 0
+                ? ""
+                : field.value
+            }
             startAdornment={startAdornment || null}
             endAdornment={endAdornment || null}
             onFocus={onFocus}
