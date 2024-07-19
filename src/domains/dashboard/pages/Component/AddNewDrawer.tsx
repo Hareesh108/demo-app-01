@@ -121,7 +121,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
             ...values,
           });
           setOpen?.(false);
-          toggleDrawer(false)
+          toggleDrawer(false);
         }}
       >
         {({
