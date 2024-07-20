@@ -29,9 +29,11 @@ export const sectionASlice = createSlice({
       ...state,
       ...action.payload,
     }),
+    setSectionADataInitial: () => initialState,
   },
 });
 
-export const { setSectionAData } = sectionASlice.actions;
+export const { setSectionAData, setSectionADataInitial } =
+  sectionASlice.actions;
 
 export default sectionASlice.reducer;

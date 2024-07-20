@@ -17,9 +17,13 @@ import { getShareholderTypes } from "./service/section";
 import FormProvider from "../../../components/hook-form/FormProvider";
 import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import { setSectionAData } from "../../../slices/sectionASlice";
+import {
+  setSectionAData,
+  setSectionADataInitial,
+} from "../../../slices/sectionASlice";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { Navigate, useNavigate } from "react-router-dom";
+import { setSectionAExecutiveInitial } from "../../../slices/sectionAExecutiveSlice";
 
 export interface ExecutiveOfficerInfo {
   authorityLim: string;
@@ -64,6 +68,11 @@ const sectionA = () => {
   useEffect(() => {
     handleCLick();
     dispatch(setLeftBarProgress({ step: 0 }));
+  }, []);
+
+  useEffect(() => {
+    dispatch(setSectionAExecutiveInitial());
+    dispatch(setSectionADataInitial());
   }, []);
 
   const handleToggleClick = () => {
