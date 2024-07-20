@@ -15,7 +15,7 @@ import AddNewAddressDrawer from "./Component/AddNewDrawer";
 import InfoBox from "./Component/InfoBox";
 import { getShareholderTypes } from "./service/section";
 import FormProvider from "../../../components/hook-form/FormProvider";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setSectionAData } from "../../../slices/sectionASlice";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
@@ -38,7 +38,6 @@ const sectionA = () => {
   );
 
   const [open, setOpen] = useState(false);
-  const [idNumber, setIdNumber] = useState<number | null | string>("");
 
   const [isExecutiveOfficer, setIsExecutiveOfficer] = useState("");
 
@@ -79,9 +78,19 @@ const sectionA = () => {
       passportNumber: "",
       position: "",
       staffId: "",
+      executiveOfficer: "",
     },
   });
-  const { handleSubmit } = methods;
+  const {
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = methods;
+
+  const values = watch();
+  console.log(values, "values///");
 
   console.log(NRICNumber, name, staffId, " NRICNumber,name,staffId ");
 
@@ -137,7 +146,6 @@ const sectionA = () => {
                   autoComplete="off"
                   name="staffId"
                   label="Staff ID Number"
-                  value={idNumber!}
                 />
               </Box>
 
@@ -185,45 +193,56 @@ const sectionA = () => {
               </Box>
 
               <Box padding={"16px"}>
-                <FormControl variant="standard" sx={{ width: "100%" }}>
-                  <InputLabel id="executiveOfficer">
-                    Executive Officer
-                  </InputLabel>
-                  <Select
-                    labelId="executiveOfficer"
-                    id="executiveOfficer"
-                    value={isExecutiveOfficer}
-                    onChange={(e: any) => {
-                      if (e?.target?.value === "Yes") {
-                        setOpen(true);
-                      } else {
-                        setExecutiveOfficerInfo({
-                          authorityLim: "",
-                          creditMan: "",
-                          headOM: "",
-                          isCommMember: "",
-                          whichComm: "",
-                        });
-                      }
-                      setIsExecutiveOfficer(e?.target?.value);
-                    }}
-                    label="Age"
-                    sx={{ width: "100%" }}
-                    fullWidth
-                  >
-                    <MenuItem value={"Yes"}>Yes</MenuItem>
-                    <MenuItem value={"No"}>No</MenuItem>
-                  </Select>
-                </FormControl>
-                <Typography
-                  sx={{ color: "#8A8A8C" }}
-                  fontWeight={"600"}
-                  fontSize={"12px"}
-                >
-                  Members or management having authority and responsibility for
-                  planning, directing and/or controlling the activities of the
-                  Bank
-                </Typography>
+                <Controller
+                  name="executiveOfficer"
+                  control={control}
+                  rules={{ required: "" }}
+                  render={({ field, fieldState: { error } }) => (
+                    <>
+                      <FormControl variant="standard" sx={{ width: "100%" }}>
+                        <InputLabel id="executiveOfficer">
+                          Executive Officer
+                        </InputLabel>
+                        <Select
+                          {...field}
+                          labelId="executiveOfficer"
+                          id="executiveOfficer"
+                          value={isExecutiveOfficer}
+                          onChange={(e: any) => {
+                            field.onChange(e);
+                            if (e?.target?.value === "Yes") {
+                              setOpen(true);
+                            } else {
+                              setExecutiveOfficerInfo({
+                                authorityLim: "",
+                                creditMan: "",
+                                headOM: "",
+                                isCommMember: "",
+                                whichComm: "",
+                              });
+                            }
+                            setIsExecutiveOfficer(e?.target?.value);
+                          }}
+                          label="Age"
+                          sx={{ width: "100%" }}
+                          fullWidth
+                        >
+                          <MenuItem value={"Yes"}>Yes</MenuItem>
+                          <MenuItem value={"No"}>No</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <Typography
+                        sx={{ color: "#8A8A8C" }}
+                        fontWeight={"600"}
+                        fontSize={"12px"}
+                      >
+                        Members or management having authority and
+                        responsibility for planning, directing and/or
+                        controlling the activities of the Bank
+                      </Typography>
+                    </>
+                  )}
+                />
               </Box>
 
               {executiveOfficerInfo.isCommMember !== "" &&

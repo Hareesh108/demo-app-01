@@ -16,6 +16,8 @@ import TextFieldComponent from "../../../../components/TextFieldComponent";
 import FormProvider from "../../../../components/hook-form/FormProvider";
 import { Controller, useForm } from "react-hook-form";
 import { ExecutiveOfficerInfo } from "../section_A";
+import { useAppDispatch } from "../../../../hooks/hooks";
+import { setSectionAExecutiveData } from "../../../../slices/sectionAExecutiveSlice";
 
 type NewAddressType = {
   isCommMember: string;
@@ -45,8 +47,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
   setIsExecutiveOfficer,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
-
-  console.log(executiveOfficerInfo, "Inside");
+  const dispatch = useAppDispatch();
 
   const toggleDrawer =
     (openToggle: boolean) =>
@@ -102,6 +103,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
 
   const onSubmit = (values: any) => {
     setExecutiveOfficerInfo(values);
+    dispatch(setSectionAExecutiveData(values));
     console.log(values, "///");
     setOpen?.(false);
     toggleDrawer(false);

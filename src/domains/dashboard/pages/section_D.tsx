@@ -25,14 +25,43 @@ const sectionD = () => {
   const [infoDeclare, setInfoDeclare] = useState<boolean>(false);
   const [allDeclare, setAllDeclare] = useState<boolean>(false);
 
-  const { name, department, NRICNumber, passportNumber, position, staffId } =
-    useAppSelector((state) => state.reducer.sectionA);
+  const {
+    name,
+    department,
+    NRICNumber,
+    passportNumber,
+    position,
+    staffId,
+    executiveOfficer,
+  } = useAppSelector((state) => state.reducer.sectionA);
+  const { authorityLim, isCommMember, whichComm, creditMan, headOM } =
+    useAppSelector((state) => state.reducer.sectionAExecutive);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 3 }));
   }, []);
+
+  console.log(
+    name,
+    department,
+    NRICNumber,
+    passportNumber,
+    position,
+    staffId,
+    executiveOfficer,
+    "::>>department>>NRICNumber>>passportNumber>>position>>staffId>>executiveOfficer"
+  );
+
+  console.log(
+    authorityLim,
+    isCommMember,
+    whichComm,
+    creditMan,
+    headOM,
+    "::>>authorityLim,isCommMember, whichComm, creditMan, headOM"
+  );
 
   console.log(declare, "declare");
   console.log(understand, "understand");
@@ -51,12 +80,12 @@ const sectionD = () => {
       nationalId: NRICNumber,
       oldNationalId: null,
       position: position,
-      executiveOfficer: false,
-      committeeMember: false,
-      commiteeeMemberType: null,
-      officerAuthorityLimit: true,
-      officerCreditManager: true,
-      officerHeadOfMarketing: false,
+      executiveOfficer: executiveOfficer === "Yes",
+      committeeMember: isCommMember,
+      commiteeeMemberType: isCommMember ? whichComm : null,
+      officerAuthorityLimit: authorityLim,
+      officerCreditManager: creditMan,
+      officerHeadOfMarketing: headOM,
       businesses: null,
       relatives: [
         {

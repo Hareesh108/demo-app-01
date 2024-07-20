@@ -8,6 +8,7 @@ export interface MyType {
   passportNumber: string;
   position: string;
   staffId: string;
+  executiveOfficer: string;
 }
 
 const initialState: MyType = {
@@ -17,6 +18,7 @@ const initialState: MyType = {
   passportNumber: "",
   position: "",
   staffId: "",
+  executiveOfficer: "",
 };
 
 export const sectionASlice = createSlice({
