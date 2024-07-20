@@ -25,6 +25,7 @@ import {
 type NewAddressProps = {
   open?: boolean;
   setFamilyData: any;
+  setOpen: any;
 };
 
 const validationSchema = Yup.object().shape({
@@ -45,6 +46,7 @@ const validationSchema = Yup.object().shape({
 
 const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
   open,
+  setOpen,
   setFamilyData,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
@@ -59,6 +61,7 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
         }
         return false;
       }
+      setOpen?.(false);
     };
 
   const [positionList, setPositionList] = useState([
@@ -244,6 +247,8 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
     console.log(data, "data");
 
     setFamilyData((prev: any) => [...prev, data]);
+    setOpen(false);
+    toggleDrawer(false);
   };
 
   return (
@@ -280,6 +285,10 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
                 edge="end"
                 color="inherit"
                 aria-label="close"
+                onClick={() => {
+                  setOpen(false);
+                  toggleDrawer(false);
+                }}
               >
                 <Tooltip title="Close">
                   <CloseIcon sx={{ color: "Grey" }} />

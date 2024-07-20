@@ -298,7 +298,11 @@ const sectionC = () => {
           </Box>
         </Box>
       </Box>
-      <FamilyInfoDrawer open={open} setFamilyData={setFamilyData} />
+      <FamilyInfoDrawer
+        open={open}
+        setOpen={setOpen}
+        setFamilyData={setFamilyData}
+      />
     </>
   );
 };
