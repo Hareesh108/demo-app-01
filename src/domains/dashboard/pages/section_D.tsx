@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Box, FormControl, FormHelperText, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, FormControl, Typography } from "@mui/material";
 import StepIndicator from "../../../components/stepIndicator";
 import Button from "../../../components/Button";
 import FormGroup from "@mui/material/FormGroup";
@@ -17,21 +17,6 @@ import * as yup from "yup";
 
 const sectionD = () => {
   const { enqueueSnackbar } = useSnackbar();
-
-  const [declare, setDeclare] = useState<boolean>(false);
-  const [understand, setUnderstand] = useState<boolean>(false);
-  const [infoDeclare, setInfoDeclare] = useState<boolean>(false);
-  const [allDeclare, setAllDeclare] = useState<boolean>(false);
-
-  const [isDeclare, setIsDeclare] = useState<boolean>(false);
-  const [isUnderstand, setIsUnderstand] = useState<boolean>(false);
-  const [isInfoDeclare, setIsInfoDeclare] = useState<boolean>(false);
-  const [isAllDeclare, setIsAllDeclare] = useState<boolean>(false);
-
-  console.log(isDeclare, isUnderstand, isInfoDeclare, ">>");
-  console.log(isAllDeclare, "isAllDeclare");
-
-  const [formSuccess, setFormSuccess] = useState<boolean>(false);
 
   const {
     name,
@@ -60,7 +45,6 @@ const sectionD = () => {
       .boolean()
       .oneOf([true], "You must agree to the information declaration"),
     allCheck: yup.boolean(),
-    // Add other fields as necessary
   });
 
   const methods = useForm({
@@ -81,8 +65,6 @@ const sectionD = () => {
     setValue,
     formState: { isValid },
   } = methods;
-
-  console.log(isValid, "isValid");
 
   const values = watch();
 
@@ -114,7 +96,6 @@ const sectionD = () => {
     if (values.allCheck !== allChecked) {
       setValue("allCheck", allChecked);
     }
-    console.log("Hii");
   }, [values.declare, values.understand, values.infoDeclare, setValue]);
 
   const handleAllCheck = (checked: boolean) => {
@@ -123,13 +104,8 @@ const sectionD = () => {
     setValue("infoDeclare", checked, { shouldValidate: true });
   };
 
-  console.log(declare, "declare");
-  console.log(understand, "understand");
-  console.log(infoDeclare, "infoDeclare");
-  console.log(allDeclare, "allDeclare");
-
   const sendConnectedParty = async (data: any) => {
-    console.log(data, "data");
+    console.log(data, "sendConnectedParty");
 
     const payload = {
       fullName: name,
@@ -175,7 +151,6 @@ const sectionD = () => {
       const res = await sentConnectedPartiesAPi(payload);
       console.log(res, "res");
       enqueueSnackbar("Form filled successfully.", { variant: "success" });
-      setFormSuccess(true);
     } catch (err) {
       const axiosError = err as AxiosError<{ message: string }>;
       console.log(err);
