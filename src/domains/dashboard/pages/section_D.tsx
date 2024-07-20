@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, FormControl, FormHelperText, Typography } from "@mui/material";
 import StepIndicator from "../../../components/stepIndicator";
 import Button from "../../../components/Button";
 import FormGroup from "@mui/material/FormGroup";
@@ -8,22 +8,30 @@ import Checkbox from "@mui/material/Checkbox";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import FormProvider from "../../../components/hook-form/FormProvider";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, useFormContext } from "react-hook-form";
 import { sentConnectedPartiesAPi } from "./service/section";
-
-type newDeclarationForm = {
-  id?: string;
-  buisnRegNoOld: string;
-  buisnRegNo?: string;
-  cmpnyName?: string;
-  shareHolderDetails?: string;
-};
+import { useSnackbar } from "notistack";
+import { AxiosError } from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const sectionD = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [declare, setDeclare] = useState<boolean>(false);
   const [understand, setUnderstand] = useState<boolean>(false);
   const [infoDeclare, setInfoDeclare] = useState<boolean>(false);
   const [allDeclare, setAllDeclare] = useState<boolean>(false);
+
+  const [isDeclare, setIsDeclare] = useState<boolean>(false);
+  const [isUnderstand, setIsUnderstand] = useState<boolean>(false);
+  const [isInfoDeclare, setIsInfoDeclare] = useState<boolean>(false);
+  const [isAllDeclare, setIsAllDeclare] = useState<boolean>(false);
+
+  console.log(isDeclare, isUnderstand, isInfoDeclare, ">>");
+  console.log(isAllDeclare, "isAllDeclare");
+
+  const [formSuccess, setFormSuccess] = useState<boolean>(false);
 
   const {
     name,
@@ -42,6 +50,38 @@ const sectionD = () => {
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 3 }));
   }, []);
+
+  const validationSchema = yup.object().shape({
+    declare: yup.boolean().oneOf([true], "You must agree to the declaration"),
+    understand: yup
+      .boolean()
+      .oneOf([true], "You must agree to the understanding"),
+    infoDeclare: yup
+      .boolean()
+      .oneOf([true], "You must agree to the information declaration"),
+    // Add other fields as necessary
+  });
+
+  const methods = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      declare: false,
+      understand: false,
+      infoDeclare: false,
+    },
+    mode: "onChange",
+  });
+
+  const {
+    handleSubmit,
+    watch,
+    control,
+    formState: { isValid },
+  } = methods;
+
+  const values = watch();
+
+  console.log(values, "values");
 
   console.log(
     name,
@@ -114,17 +154,21 @@ const sectionD = () => {
     try {
       const res = await sentConnectedPartiesAPi(payload);
       console.log(res, "res");
+      enqueueSnackbar("Form filled successfully.", { variant: "success" });
+      setFormSuccess(true);
     } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>;
       console.log(err);
+      console.log(axiosError, "axiosError");
+
+      enqueueSnackbar(
+        axiosError?.response?.data?.message ?? "Something went wrong",
+        {
+          variant: "error",
+        }
+      );
     }
   };
-
-  const methods = useForm({
-    defaultValues: {
-      name: "",
-    },
-  });
-  const { handleSubmit } = methods;
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(sendConnectedParty)}>
@@ -161,69 +205,97 @@ const sectionD = () => {
           </Typography>
 
           <FormGroup sx={{ mt: "16px" }}>
-            <FormControlLabel
-              sx={{ alignItems: "flex-start", mb: "16px" }}
-              control={
-                <Checkbox
-                  size="medium"
-                  checked={declare}
-                  onChange={() => setDeclare(!declare)}
-                />
-              }
-              label={
-                <Typography
-                  fontSize="12px"
-                  fontWeight="400"
-                  style={{ color: "#151515" }}
-                >
-                  I hereby make the following declaration of information on
-                  myself, my close relatives and parties connected to me/them,
-                  according to the definition in the above BNM Guidelines.
-                </Typography>
-              }
+            <Controller
+              name="declare"
+              control={control}
+              defaultValue={false}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl variant="standard" fullWidth error={!!error}>
+                  <FormControlLabel
+                    sx={{ alignItems: "flex-start", mb: "16px" }}
+                    control={
+                      <Checkbox
+                        {...field}
+                        size="medium"
+                        checked={field.value}
+                      />
+                    }
+                    label={
+                      <Typography
+                        fontSize="12px"
+                        fontWeight="400"
+                        style={{ color: "#151515" }}
+                      >
+                        I hereby make the following declaration of information
+                        on myself, my close relatives and parties connected to
+                        me/them, according to the definition in the above BNM
+                        Guidelines.
+                      </Typography>
+                    }
+                  />
+                </FormControl>
+              )}
             />
 
-            <FormControlLabel
-              sx={{ alignItems: "flex-start", mb: "16px" }}
-              control={
-                <Checkbox
-                  size="medium"
-                  checked={understand}
-                  onChange={() => setUnderstand(!understand)}
-                />
-              }
-              label={
-                <Typography
-                  fontSize="12px"
-                  fontWeight="400"
-                  style={{ color: "#151515" }}
-                >
-                  I understand that I shall also be responsible to update, in
-                  the for of additions, removal, or changes to the information
-                  from time to time or as required.
-                </Typography>
-              }
+            <Controller
+              name="understand"
+              control={control}
+              defaultValue={false}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl variant="standard" fullWidth error={!!error}>
+                  <FormControlLabel
+                    sx={{ alignItems: "flex-start", mb: "16px" }}
+                    control={
+                      <Checkbox
+                        {...field}
+                        size="medium"
+                        checked={field.value}
+                      />
+                    }
+                    label={
+                      <Typography
+                        fontSize="12px"
+                        fontWeight="400"
+                        style={{ color: "#151515" }}
+                      >
+                        I understand that I shall also be responsible to update,
+                        in the for of additions, removal, or changes to the
+                        information from time to time or as required.
+                      </Typography>
+                    }
+                  />
+                </FormControl>
+              )}
             />
 
-            <FormControlLabel
-              sx={{ alignItems: "flex-start", mb: "16px" }}
-              control={
-                <Checkbox
-                  size="medium"
-                  checked={infoDeclare}
-                  onChange={() => setInfoDeclare(!infoDeclare)}
-                />
-              }
-              label={
-                <Typography
-                  fontSize="12px"
-                  fontWeight="400"
-                  style={{ color: "#151515" }}
-                >
-                  I Declare that the information submitted herewith is accurate
-                  and complete, to the best of my knowledge.
-                </Typography>
-              }
+            <Controller
+              name="infoDeclare"
+              control={control}
+              defaultValue={false}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl variant="standard" fullWidth error={!!error}>
+                  <FormControlLabel
+                    sx={{ alignItems: "flex-start", mb: "16px" }}
+                    control={
+                      <Checkbox
+                        {...field}
+                        size="medium"
+                        checked={field.value}
+                      />
+                    }
+                    label={
+                      <Typography
+                        fontSize="12px"
+                        fontWeight="400"
+                        style={{ color: "#151515" }}
+                      >
+                        I Declare that the information submitted herewith is
+                        accurate and complete, to the best of my knowledge.
+                      </Typography>
+                    }
+                  />
+                </FormControl>
+              )}
             />
 
             <FormControlLabel
@@ -237,6 +309,9 @@ const sectionD = () => {
                     setInfoDeclare(true);
                     setAllDeclare(!allDeclare);
                     setUnderstand(true);
+                    setIsInfoDeclare(!isInfoDeclare);
+                    setIsUnderstand(!isUnderstand);
+                    setIsDeclare(!isDeclare);
                   }}
                 />
               }
@@ -314,8 +389,8 @@ const sectionD = () => {
                 variant="contained"
                 size="large"
                 btnText="Submit"
-                onClick={() => {}}
                 fullWidth
+                disabled={!isValid}
               />
             </Box>
           </Box>

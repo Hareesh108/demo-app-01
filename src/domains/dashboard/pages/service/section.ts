@@ -21,12 +21,6 @@ export const getShareholderTypes = async () => {
 };
 
 export const sentConnectedPartiesAPi = async (payload: any) => {
-  //   const uri = `${basePath}/connected-party/v1/shareholderTypes`;
-
-  //   const res = ApiServerClient.get(uri);
-
-  //   return res;
-
   const response = await axios.post(
     `${basePath}/connected-party/v1/create`,
     payload
