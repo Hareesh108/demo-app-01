@@ -53,20 +53,20 @@ const sectionC = () => {
   }, []);
 
   const [familyData, setFamilyData] = React.useState<FamilyData[]>([
-    {
-      id: "1",
-      fullName: "John Doe",
-      nationalId: "123456789",
-      oldNationalId: "987654321",
-      passportNumber: "A1234567",
-      countryCode: "US",
-      name: "Doe Enterprises",
-      businessRegistrationNumber: "BRN123456",
-      oldBusinessRegistrationNumber: "BRN654321",
-      position: "CEO",
-      shareholder: "Jane Doe",
-      relationship: "Spouse",
-    },
+    // {
+    //   id: "1",
+    //   fullName: "John Doe",
+    //   nationalId: "123456789",
+    //   oldNationalId: "987654321",
+    //   passportNumber: "A1234567",
+    //   countryCode: "US",
+    //   name: "Doe Enterprises",
+    //   businessRegistrationNumber: "BRN123456",
+    //   oldBusinessRegistrationNumber: "BRN654321",
+    //   position: "CEO",
+    //   shareholder: "Jane Doe",
+    //   relationship: "Spouse",
+    // },
     // {
     //   id: "2",
     //   fullName: "John Doe",
@@ -82,6 +82,8 @@ const sectionC = () => {
     //   relationship: "Spouse",
     // },
   ]);
+
+  console.log(familyData, "familyData");
 
   const transformFamilyData = (data: FamilyData[]): Person[] => {
     return data.map((item) => ({
@@ -296,7 +298,7 @@ const sectionC = () => {
           </Box>
         </Box>
       </Box>
-      <FamilyInfoDrawer open={open} />
+      <FamilyInfoDrawer open={open} setFamilyData={setFamilyData} />
     </>
   );
 };

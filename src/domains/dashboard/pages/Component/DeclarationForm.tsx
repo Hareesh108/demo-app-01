@@ -144,15 +144,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 label="Company Name connected to you (if any)"
                 id="cmpnyName"
                 name="cmpnyName"
-                onBlur={handleBlur}
               />
-              <Typography sx={{ color: "red" }}>
-                {
-                  (errors.cmpnyName && touched.cmpnyName
-                    ? errors.cmpnyName
-                    : null) as ReactNode
-                }
-              </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
@@ -160,15 +152,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 label="Business Registration Number"
                 id="cmpnyName"
                 name="buisnRegNo"
-                onBlur={handleBlur}
               />
-              <Typography sx={{ color: "red" }}>
-                {
-                  (errors.addressOne && touched.addressOne
-                    ? errors.addressOne
-                    : null) as ReactNode
-                }
-              </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
@@ -176,17 +160,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 label="Business Registration Number (Old) - Optional"
                 id="cmpnyName"
                 name="buisnRegNoOld"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.buisnRegNoOld}
               />
-              <Typography sx={{ color: "red" }}>
-                {
-                  (errors.addressOne && touched.addressOne
-                    ? errors.addressOne
-                    : null) as ReactNode
-                }
-              </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
@@ -215,17 +189,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                     value: "Officer",
                   },
                 ]}
-                onChange={handleChange}
-                value={values.position}
-                fullWidth
               />
-              <Typography sx={{ color: "red" }}>
-                {
-                  (errors.creditMan && touched.creditMan
-                    ? errors.creditMan
-                    : null) as ReactNode
-                }
-              </Typography>
             </Box>
 
             <Box paddingX="30px" paddingY="16px">
@@ -250,9 +214,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                     value: "NIL",
                   },
                 ]}
-                onChange={handleChange}
-                value={values.shareHolderDetails}
-                fullWidth
               />
               <Typography sx={{ color: "red" }}>
                 {

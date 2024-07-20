@@ -195,7 +195,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                       { label: "No", value: "No" },
                     ]}
                     {...field}
-                    fullWidth
                   />
                 )}
               />
@@ -218,7 +217,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                         { label: "ALCO", value: "ALCO" },
                       ]}
                       {...field}
-                      fullWidth
                     />
                   )}
                 />
@@ -240,7 +238,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                       { label: "No", value: "No" },
                     ]}
                     {...field}
-                    fullWidth
                   />
                 )}
               />
@@ -261,7 +258,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                       { label: "No", value: "No" },
                     ]}
                     {...field}
-                    fullWidth
                   />
                 )}
               />
@@ -282,7 +278,6 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                       { label: "No", value: "No" },
                     ]}
                     {...field}
-                    fullWidth
                   />
                 )}
               />

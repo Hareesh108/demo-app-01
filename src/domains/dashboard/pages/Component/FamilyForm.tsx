@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../../../components/Button";
 import SelectInputComponent from "../../../../components/SelectInputComponent";
 import TextFieldComponent from "../../../../components/TextFieldComponent";
@@ -11,31 +11,42 @@ import {
 } from "@mui/material";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import CloseIcon from "@mui/icons-material/Close";
-import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import FormProvider from "../../../../components/hook-form";
 import { useForm } from "react-hook-form";
-
-type NewDeclarationForm = {
-  id?: string;
-  name?: string;
-  nricNumber?: string;
-  oldNRICNumber?: string;
-  passportNo?: string;
-  relationship?: string;
-  bRegNumber?: string;
-  shareHolderDetails?: string;
-  cmpnyName?: string;
-  positionHeld?: string;
-};
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  getPositionTypes,
+  getRelationshipTypes,
+  getShareholderTypes,
+} from "../service/section";
 
 // Declare obj
 type NewAddressProps = {
   open?: boolean;
-  closeDrawer?: () => void;
+  setFamilyData: any;
 };
 
-const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
+const validationSchema = Yup.object().shape({
+  fullName: Yup.string().required("Full name is required"),
+  nationalId: Yup.string().required("NRIC number is required"),
+  oldNationalId: Yup.string().nullable(),
+  passportNumber: Yup.string().nullable(),
+  countryCode: Yup.string().nullable(),
+  name: Yup.string().required("Name is required"),
+  businessRegistrationNumber: Yup.string().required(
+    "Business registration number is required"
+  ),
+  oldBusinessRegistrationNumber: Yup.string().nullable(),
+  position: Yup.string().required("Position is required"),
+  shareholder: Yup.string().required("Shareholder details are required"),
+  relationship: Yup.string().required("Relationship is required"),
+});
+
+const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
+  open,
+  setFamilyData,
+}) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
 
   const toggleDrawer =
@@ -48,8 +59,157 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
         }
         return false;
       }
-      closeDrawer;
     };
+
+  const [positionList, setPositionList] = useState([
+    {
+      label: "DIRECTOR",
+      value: "Director",
+    },
+    {
+      label: "EXCUTIVE_OFFICER",
+      value: "Excutive Office",
+    },
+    {
+      label: "HEAD_OF_DEPARTMENT",
+      value: "Head Of Department",
+    },
+    {
+      label: "MANAGER",
+      value: "Manager",
+    },
+    {
+      label: "OFFICER",
+      value: "Officer",
+    },
+    {
+      label: "SHAREHOLDER",
+      value: "Shareholder",
+    },
+    {
+      label: "GUARANTOR",
+      value: "Guarantor",
+    },
+  ]);
+  console.log(positionList, "positionList");
+
+  const getPositionTypesList = async () => {
+    try {
+      const res = await getPositionTypes();
+
+      if (res?.status === 200) {
+        setPositionList(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [relationList, setRelationList] = useState([
+    {
+      label: "SF",
+      value: "Self",
+    },
+    {
+      label: "SP",
+      value: "Spouse",
+    },
+    {
+      label: "C",
+      value: "Child",
+    },
+    {
+      label: "B",
+      value: "Brother",
+    },
+    {
+      label: "BS",
+      value: "Brother's Spouse",
+    },
+    {
+      label: "SIL",
+      value: "Son-In-Law",
+    },
+    {
+      label: "F",
+      value: "Father",
+    },
+    {
+      label: "M",
+      value: "Mother",
+    },
+    {
+      label: "SC",
+      value: "Step Child",
+    },
+    {
+      label: "S",
+      value: "Sister",
+    },
+    {
+      label: "SS",
+      value: "Sister's Spouse",
+    },
+    {
+      label: "DIL",
+      value: "Daughter-In-Law",
+    },
+    {
+      label: "AC",
+      value: "Adopted Child",
+    },
+  ]);
+  console.log(relationList, "relationList");
+
+  const getRelationshipTypesList = async () => {
+    try {
+      const res = await getRelationshipTypes();
+
+      if (res?.status === 200) {
+        setRelationList(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [shareholderList, setShareholderList] = useState([
+    {
+      label: "MORE_THAN_50",
+      value: ">50%",
+    },
+    {
+      label: "BETWEEN_20_AND_50",
+      value: ">=20%, <=50%",
+    },
+    {
+      label: "LESS_THAN_20",
+      value: "<20%",
+    },
+    {
+      label: "NIL",
+      value: "NIL",
+    },
+  ]);
+  console.log(shareholderList, "shareholderList");
+
+  const getShareholderTypesList = async () => {
+    try {
+      const res = await getShareholderTypes();
+
+      if (res?.status === 200) {
+        setShareholderList(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   getPositionTypesList();
+  //   getRelationshipTypesList();
+  //   getShareholderTypesList();
+  // }, []);
 
   const methods = useForm({
     defaultValues: {
@@ -65,34 +225,36 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
       shareholder: "",
       relationship: "",
     },
-    // resolver: yupResolver(addressSchema),
+    resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
 
   const {
     handleSubmit,
-    control,
     watch,
-    reset,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = methods;
 
   const values = watch();
   console.log(values, "values");
 
   const onSubmit = async (data: any) => {
+    console.log("Hii");
+
     console.log(data, "data");
+
+    setFamilyData((prev: any) => [...prev, data]);
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <div key="rightDrawer">
-        <SwipeableDrawer
-          open={open}
-          anchor="right"
-          onClose={toggleDrawer(false)}
-          onOpen={toggleDrawer(true)}
-        >
+    <div key="rightDrawer">
+      <SwipeableDrawer
+        open={open}
+        anchor="right"
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Box
             sx={{
               width: setSizeBanner ? 448 : "100vw",
@@ -118,7 +280,6 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
                 edge="end"
                 color="inherit"
                 aria-label="close"
-                onClick={closeDrawer}
               >
                 <Tooltip title="Close">
                   <CloseIcon sx={{ color: "Grey" }} />
@@ -141,117 +302,64 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="Name as per NRIC"
-                id="name"
-                name="name"
+                id="fullName"
+                name="fullName"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="NRIC Number"
-                id="nricNumber"
-                name="nricNumber"
+                id="nationalId"
+                name="nationalId"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="Old NRIC Number (if any)"
-                id="oldNRICNumber"
-                name="oldNRICNumber"
+                id="oldNationalId"
+                name="oldNationalId"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="Passport Number (if any)"
-                id="passportNo"
-                name="passportNo"
+                id="passportNumber"
+                name="passportNumber"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <SelectInputComponent
-                value={"nn"}
                 label="Relationship"
                 name="relationship"
-                options={[
-                  {
-                    label: "Director",
-                    value: "Director",
-                  },
-                  {
-                    label: "Executive Officer",
-                    value: "Executive Officer",
-                  },
-                  {
-                    label: "Head of Department",
-                    value: "Head of Department",
-                  },
-                  {
-                    label: "Manager",
-                    value: "Manager",
-                  },
-                  {
-                    label: "Officer",
-                    value: "Officer",
-                  },
-                ]}
-                fullWidth
+                options={relationList}
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="Business Registration Number"
-                id="bRegNumber"
-                name="bRegNumber"
+                id="businessRegistrationNumber"
+                name="businessRegistrationNumber"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <TextFieldComponent
                 label="Name of Company/ Entity connect to"
-                id="cmpnyName"
-                name="cmpnyName"
+                id="name"
+                name="name"
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <SelectInputComponent
-                value={"hh"}
                 label="Position held at that company"
-                name="positionHeld"
-                options={[
-                  {
-                    label: ">50%",
-                    value: ">50%",
-                  },
-                  {
-                    label: "≥20%, ≤50%",
-                    value: "≥20%, ≤50%",
-                  },
-                  {
-                    label: "<20%",
-                    value: "<20%",
-                  },
-                  {
-                    label: "NIL",
-                    value: "NIL",
-                  },
-                ]}
-                fullWidth
+                name="position"
+                options={positionList}
               />
             </Box>
             <Box paddingX="30px" paddingY="16px">
               <SelectInputComponent
-                label="Shareholder details in the Organisation"
-                name="shareHolderDetails"
-                options={[
-                  {
-                    label: ">50%",
-                    value: ">50%",
-                  },
-                  {
-                    label: "≥20%, ≤50%",
-                    value: "≥20%, ≤50%",
-                  },
-                ]}
-                value={"bb"}
-                fullWidth
+                label="Shareholder details in the Organization"
+                name="shareholder"
+                options={shareholderList}
               />
             </Box>
             <Box
@@ -278,13 +386,13 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({ open, closeDrawer }) => {
                 size="large"
                 fullWidth={!setSizeBanner}
                 variant="contained"
+                disabled={!isValid}
               />
             </Box>
-            =
           </Box>
-        </SwipeableDrawer>
-      </div>
-    </FormProvider>
+        </FormProvider>
+      </SwipeableDrawer>
+    </div>
   );
 };
 

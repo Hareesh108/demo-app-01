@@ -77,7 +77,7 @@ const TextFieldComponent: React.FC<InputFieldProps & TextFieldProps> = ({
               caretColor: "#EA0029",
               fontWeight: 700,
               lineHeight: "22px",
-              ...(sx && sx),
+              ...sx,
             }}
             name={name}
             id={`standard-${name}`}
