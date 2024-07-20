@@ -1,16 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface MyType {
-  NRICNumber: string;
-  department: string;
-  name: string;
-  passportNumber: string;
-  position: string;
-  staffId: string;
-  executiveOfficer: string;
-}
-
 interface Business {
   name: string;
   businessRegistrationNumber: string;
@@ -19,7 +9,7 @@ interface Business {
   shareholder: string;
 }
 
-interface Person {
+export interface Person {
   fullName: string;
   nationalId: string;
   oldNationalId: string | null;
@@ -53,7 +43,7 @@ export const sectionCSlice = createSlice({
   name: "sectionC",
   initialState,
   reducers: {
-    setSectionCData: (state, action: PayloadAction<MyType>) => ({
+    setSectionCData: (state, action: PayloadAction<Person[]>) => ({
       ...state,
       ...action.payload,
     }),

@@ -14,6 +14,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import StepperChecklistSlice from "../slices/StepperChecklistSlice";
 import sectionASlice from "../slices/sectionASlice";
 import sectionAExecutiveSlice from "../slices/sectionAExecutiveSlice";
+import sectionCSlice from "../slices/sectionCSlice";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   stepperChecklist: StepperChecklistSlice,
   sectionA: sectionASlice,
   sectionAExecutive: sectionAExecutiveSlice,
+  sectionC: sectionCSlice,
 });
 
 const reducer = persistReducer(persistConfig, rootReducer);

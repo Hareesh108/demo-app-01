@@ -8,6 +8,11 @@ import FamilyBox from "./Component/FamilyBox";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { useNavigate } from "react-router-dom";
+import {
+  Person,
+  setSectionCData,
+  setSectionCDataInitial,
+} from "../../../slices/sectionCSlice";
 
 type newDeclarationForm = {
   id?: string;
@@ -17,6 +22,21 @@ type newDeclarationForm = {
   position?: string;
   shareHolderDetails?: string;
 };
+
+export interface FamilyData {
+  id: string;
+  fullName: string;
+  nationalId: string;
+  oldNationalId: string;
+  passportNumber: string;
+  countryCode: string;
+  name: string;
+  businessRegistrationNumber: string;
+  oldBusinessRegistrationNumber: string;
+  position: string;
+  shareholder: string;
+  relationship: string;
+}
 
 const sectionC = () => {
   const [open, setOpen] = useState(false);
@@ -28,32 +48,66 @@ const sectionC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const updateForm = (data: any) => {
-    setEdit(false);
-    setOpen(false);
-    setCurrForm({});
-    if (currIndex !== null && currIndex !== undefined) {
-      // Create a new array with the updated value
-      const updatedDeclaration = declaration.map((item, index) =>
-        index === currIndex ? data : item
-      );
-
-      // Update the state with the new array
-      setDeclaration(updatedDeclaration);
-    }
-  };
-
-  const deleteForm = (data: any) => {
-    console.log(data);
-
-    const updatedItems = declaration.filter((item) => item.id !== data.id);
-
-    setDeclaration(updatedItems);
-  };
-
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 2 }));
   }, []);
+
+  const [familyData, setFamilyData] = React.useState<FamilyData[]>([
+    {
+      id: "1",
+      fullName: "John Doe",
+      nationalId: "123456789",
+      oldNationalId: "987654321",
+      passportNumber: "A1234567",
+      countryCode: "US",
+      name: "Doe Enterprises",
+      businessRegistrationNumber: "BRN123456",
+      oldBusinessRegistrationNumber: "BRN654321",
+      position: "CEO",
+      shareholder: "Jane Doe",
+      relationship: "Spouse",
+    },
+    // {
+    //   id: "2",
+    //   fullName: "John Doe",
+    //   nationalId: "123456789",
+    //   oldNationalId: "987654321",
+    //   passportNumber: "A1234567",
+    //   countryCode: "US",
+    //   name: "Doe Enterprises",
+    //   businessRegistrationNumber: "BRN123456",
+    //   oldBusinessRegistrationNumber: "BRN654321",
+    //   position: "CEO",
+    //   shareholder: "Jane Doe",
+    //   relationship: "Spouse",
+    // },
+  ]);
+
+  const transformFamilyData = (data: FamilyData[]): Person[] => {
+    return data.map((item) => ({
+      fullName: item.fullName,
+      nationalId: item.nationalId,
+      oldNationalId: item.oldNationalId,
+      passportNumber: item.passportNumber,
+      countryCode: item.countryCode,
+      businesses: [
+        {
+          name: item.name,
+          businessRegistrationNumber: item.businessRegistrationNumber,
+          oldBusinessRegistrationNumber: item.oldBusinessRegistrationNumber,
+          position: item.position,
+          shareholder: item.shareholder,
+        },
+      ],
+      relationship: item.relationship,
+    }));
+  };
+
+  const onSubmit = async () => {
+    const transformedData = transformFamilyData(familyData);
+    dispatch(setSectionCDataInitial());
+    dispatch(setSectionCData(transformedData));
+  };
 
   return (
     <>
@@ -97,8 +151,6 @@ const sectionC = () => {
             <Typography>{` 3.A director, partner, executive officer, agent or guarantor and their subsidiaries or entities controlled by them.`}</Typography>
           </Typography>
 
-          <Typography></Typography>
-
           <Box sx={{ my: "18px", mx: "10px" }}>
             <Button
               sx={{
@@ -117,19 +169,10 @@ const sectionC = () => {
             />
           </Box>
 
-          {declaration?.map((item, index) => {
+          {familyData?.map((item, index) => {
             return (
-              <Box>
-                <FamilyBox
-                  data={item}
-                  updateForm={(data: any) => {
-                    setCurrIndex(index);
-                    setCurrForm(data);
-                    setOpen(true);
-                    setEdit(true);
-                  }}
-                  deleteForm={(data: any) => deleteForm(data)}
-                />
+              <Box key={item?.id}>
+                <FamilyBox data={item} />
               </Box>
             );
           })}
@@ -189,7 +232,8 @@ const sectionC = () => {
                   size="large"
                   btnText="None to Declare"
                   onClick={() => {
-                    navigate("/sectionD");
+                    // navigate("/sectionD");
+                    onSubmit();
                   }}
                   fullWidth
                 />
@@ -252,19 +296,7 @@ const sectionC = () => {
           </Box>
         </Box>
       </Box>
-      {/* <FamilyInfoDrawer
-        open={open}
-        setOpen={setOpen}
-        currentForm={currForm}
-        isEdit={edit}
-        closeDrawer={() => setOpen(false)}
-        // newAddress={declartion}
-        createForm={(val: any) => {
-          setOpen(false);
-          setDeclaration([...declaration, val]);
-        }}
-        updateConfig={updateForm}
-      /> */}
+      <FamilyInfoDrawer open={open} />
     </>
   );
 };

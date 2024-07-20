@@ -19,10 +19,25 @@ import { LoadingButton } from "@mui/lab";
 import { truncateSync } from "fs";
 import { useNavigate } from "react-router-dom";
 
+const validationSchema = yup.object().shape({
+  declare: yup.boolean().oneOf([true], "You must agree to the declaration"),
+  understand: yup
+    .boolean()
+    .oneOf([true], "You must agree to the understanding"),
+  infoDeclare: yup
+    .boolean()
+    .oneOf([true], "You must agree to the information declaration"),
+  allCheck: yup.boolean(),
+});
+
 const sectionD = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [onSuccess, setOnSuccess] = React.useState(false);
   const navigate = useNavigate();
+
+  const sectionCData = useAppSelector((state) => state.reducer.sectionC);
+
+  console.log(sectionCData, "sectionCData");
 
   const {
     name,
@@ -41,17 +56,6 @@ const sectionD = () => {
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 3 }));
   }, []);
-
-  const validationSchema = yup.object().shape({
-    declare: yup.boolean().oneOf([true], "You must agree to the declaration"),
-    understand: yup
-      .boolean()
-      .oneOf([true], "You must agree to the understanding"),
-    infoDeclare: yup
-      .boolean()
-      .oneOf([true], "You must agree to the information declaration"),
-    allCheck: yup.boolean(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(validationSchema),
@@ -111,6 +115,8 @@ const sectionD = () => {
     setValue("infoDeclare", checked, { shouldValidate: true });
   };
 
+  console.log(sectionCData[0], "sectionCData.length");
+
   const sendConnectedParty = async (data: any) => {
     console.log(data, "sendConnectedParty");
 
@@ -130,25 +136,7 @@ const sectionD = () => {
       officerCreditManager: creditMan,
       officerHeadOfMarketing: headOM,
       businesses: null,
-      relatives: [
-        {
-          fullName: "Meng Mun Hing",
-          nationalId: "580101069021",
-          oldNationalId: null,
-          passportNumber: null,
-          countryCode: null,
-          businesses: [
-            {
-              name: "KGY Sdn Bhd",
-              businessRegistrationNumber: "198611782354",
-              oldBusinessRegistrationNumber: null,
-              position: "SHAREHOLDER",
-              shareholder: "LESS_THAN_20",
-            },
-          ],
-          relationship: "SIL",
-        },
-      ],
+      relatives: sectionCData[0] ? sectionCData : null,
       createDeclaration: data?.declare,
       updateDeclaration: data?.understand,
       confirmDeclaration: data?.infoDeclare,

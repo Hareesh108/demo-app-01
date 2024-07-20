@@ -4,31 +4,14 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Delete from "../../../../assets/svgs/trash.svg";
 import Edit from "../../../../assets/svgs/edit.svg";
-
-type NewDeclarationForm = {
-  id?: string;
-  name?: string;
-  nricNumber?: string;
-  oldNRICNumber?: string;
-  passportNo?: string;
-  relationship?: string;
-  bRegNumber?: string;
-  shareHolderDetails?: string;
-  cmpnyName?: string;
-  positionHeld?: string;
-};
+import { FamilyData } from "../section_C";
+import { getFieldValue } from "../../../../utils/functions";
 
 type NewAddressProps = {
-  data: NewDeclarationForm;
-  updateForm: (data: NewDeclarationForm) => void;
-  deleteForm: (data: NewDeclarationForm) => void;
+  data: FamilyData;
 };
 
-const FamilyBox: React.FC<NewAddressProps> = ({
-  data,
-  updateForm,
-  deleteForm,
-}) => {
+const FamilyBox: React.FC<NewAddressProps> = ({ data }) => {
   return (
     <Box
       padding="16px"
@@ -44,7 +27,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Name as per NRIC
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.name ?? "--"}
+          {getFieldValue(data?.fullName)}
         </Typography>
       </Box>
 
@@ -53,7 +36,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           NRIC Number
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.nricNumber ?? "--"}
+          {getFieldValue(data?.nationalId)}
         </Typography>
       </Box>
 
@@ -62,7 +45,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Old NRIC Number (if any)
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.oldNRICNumber ?? "--"}
+          {getFieldValue(data?.oldNationalId)}
         </Typography>
       </Box>
 
@@ -71,7 +54,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Passport Number (if any)
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.passportNo ?? "--"}
+          {getFieldValue(data?.passportNumber)}
         </Typography>
       </Box>
 
@@ -80,7 +63,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Relationship
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.relationship ?? "--"}
+          {getFieldValue(data?.relationship)}
         </Typography>
       </Box>
 
@@ -89,7 +72,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Business Registration Number
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.bRegNumber ?? "--"}
+          {getFieldValue(data?.oldBusinessRegistrationNumber)}
         </Typography>
       </Box>
 
@@ -98,7 +81,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Name of Company/ Entity connect to
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.cmpnyName ?? "--"}
+          {getFieldValue(data?.name)}
         </Typography>
       </Box>
 
@@ -107,7 +90,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Position held at that company
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.positionHeld ?? "--"}
+          {getFieldValue(data?.position)}
         </Typography>
       </Box>
 
@@ -116,7 +99,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           Shareholder details in the Organisation
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.shareHolderDetails ?? "--"}
+          {getFieldValue(data?.shareholder)}
         </Typography>
       </Box>
 
@@ -135,7 +118,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           edge="end"
           color="inherit"
           aria-label="close"
-          onClick={() => updateForm(data)}
+          onClick={() => {}}
         >
           <Tooltip title="Edit">
             <img src={Edit} alt="" width="100%" />
@@ -146,7 +129,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({
           edge="end"
           color="inherit"
           aria-label="close"
-          onClick={() => deleteForm(data)}
+          onClick={() => {}}
         >
           <Tooltip title="Delete">
             <img src={Delete} alt="" width="100%" />
