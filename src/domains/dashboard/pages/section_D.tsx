@@ -59,6 +59,7 @@ const sectionD = () => {
     infoDeclare: yup
       .boolean()
       .oneOf([true], "You must agree to the information declaration"),
+    allCheck: yup.boolean(),
     // Add other fields as necessary
   });
 
@@ -68,6 +69,7 @@ const sectionD = () => {
       declare: false,
       understand: false,
       infoDeclare: false,
+      allCheck: false,
     },
     mode: "onChange",
   });
@@ -76,8 +78,11 @@ const sectionD = () => {
     handleSubmit,
     watch,
     control,
+    setValue,
     formState: { isValid },
   } = methods;
+
+  console.log(isValid, "isValid");
 
   const values = watch();
 
@@ -102,6 +107,21 @@ const sectionD = () => {
     headOM,
     "::>>authorityLim,isCommMember, whichComm, creditMan, headOM"
   );
+
+  useEffect(() => {
+    const allChecked =
+      values.declare && values.understand && values.infoDeclare;
+    if (values.allCheck !== allChecked) {
+      setValue("allCheck", allChecked);
+    }
+    console.log("Hii");
+  }, [values.declare, values.understand, values.infoDeclare, setValue]);
+
+  const handleAllCheck = (checked: boolean) => {
+    setValue("declare", checked, { shouldValidate: true });
+    setValue("understand", checked, { shouldValidate: true });
+    setValue("infoDeclare", checked, { shouldValidate: true });
+  };
 
   console.log(declare, "declare");
   console.log(understand, "understand");
@@ -146,9 +166,9 @@ const sectionD = () => {
           relationship: "SIL",
         },
       ],
-      createDeclaration: declare,
-      updateDeclaration: understand,
-      confirmDeclaration: infoDeclare,
+      createDeclaration: data?.declare,
+      updateDeclaration: data?.understand,
+      confirmDeclaration: data?.infoDeclare,
     };
 
     try {
@@ -298,32 +318,31 @@ const sectionD = () => {
               )}
             />
 
-            <FormControlLabel
-              sx={{ mb: "16px" }}
-              control={
-                <Checkbox
-                  size="medium"
-                  checked={allDeclare}
-                  onChange={() => {
-                    setDeclare(true);
-                    setInfoDeclare(true);
-                    setAllDeclare(!allDeclare);
-                    setUnderstand(true);
-                    setIsInfoDeclare(!isInfoDeclare);
-                    setIsUnderstand(!isUnderstand);
-                    setIsDeclare(!isDeclare);
-                  }}
+            <Controller
+              name="allCheck"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  sx={{ mb: "16px" }}
+                  control={
+                    <Checkbox
+                      {...field}
+                      size="medium"
+                      checked={field.value}
+                      onChange={(e) => handleAllCheck(e.target.checked)}
+                    />
+                  }
+                  label={
+                    <Typography
+                      fontSize="12px"
+                      fontWeight="400"
+                      style={{ color: "#151515" }}
+                    >
+                      Select All
+                    </Typography>
+                  }
                 />
-              }
-              label={
-                <Typography
-                  fontSize="12px"
-                  fontWeight="400"
-                  style={{ color: "#151515" }}
-                >
-                  Select All
-                </Typography>
-              }
+              )}
             />
           </FormGroup>
 
