@@ -14,9 +14,15 @@ import { useSnackbar } from "notistack";
 import { AxiosError } from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import ConfirmDialog from "../../../components/dialog/ConfirmDialog";
+import { LoadingButton } from "@mui/lab";
+import { truncateSync } from "fs";
+import { useNavigate } from "react-router-dom";
 
 const sectionD = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const [onSuccess, setOnSuccess] = React.useState(false);
+  const navigate = useNavigate();
 
   const {
     name,
@@ -63,7 +69,8 @@ const sectionD = () => {
     watch,
     control,
     setValue,
-    formState: { isValid },
+    reset,
+    formState: { isValid, isSubmitting },
   } = methods;
 
   const values = watch();
@@ -150,12 +157,12 @@ const sectionD = () => {
     try {
       const res = await sentConnectedPartiesAPi(payload);
       console.log(res, "res");
-      enqueueSnackbar("Form filled successfully.", { variant: "success" });
+      setOnSuccess(true);
     } catch (err) {
+      reset();
       const axiosError = err as AxiosError<{ message: string }>;
       console.log(err);
       console.log(axiosError, "axiosError");
-
       enqueueSnackbar(
         axiosError?.response?.data?.message ?? "Something went wrong",
         {
@@ -163,6 +170,10 @@ const sectionD = () => {
         }
       );
     }
+  };
+
+  const postUnbindDevice = async () => {
+    navigate("/");
   };
 
   return (
@@ -371,25 +382,37 @@ const sectionD = () => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button
+              <LoadingButton
                 sx={{
                   marginTop: 1,
                   width: {
                     xs: "100%",
                     sm: "max-content",
                     alignSelf: "flex-end",
+                    borderRadius: 25,
                   },
                 }}
-                variant="contained"
-                size="large"
-                btnText="Submit"
                 fullWidth
+                size="large"
                 disabled={!isValid}
-              />
+                loading={isSubmitting}
+                variant="contained"
+                type="submit"
+              >
+                Continue
+              </LoadingButton>
             </Box>
           </Box>
         </Box>
       </Box>
+
+      <ConfirmDialog
+        open={onSuccess}
+        handleClose={() => setOnSuccess(false)}
+        handleSubmit={postUnbindDevice}
+        dialogTitle="Confirmation"
+        dialogDescription="Your declaration successful submitted, please check your email for updates about your declaration. Thank you"
+      />
     </FormProvider>
   );
 };

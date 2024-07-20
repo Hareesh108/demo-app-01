@@ -25,7 +25,7 @@ import {
   setSectionADataInitial,
 } from "../../../slices/sectionASlice";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setSectionAExecutiveInitial } from "../../../slices/sectionAExecutiveSlice";
 import { yupResolver } from "@hookform/resolvers/yup";
 
