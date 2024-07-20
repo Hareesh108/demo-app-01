@@ -2,11 +2,14 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
+
+import * as yup from "yup";
 
 import StepIndicator from "../../../components/stepIndicator";
 import TextFieldComponent from "../../../components/TextFieldComponent";
@@ -24,6 +27,7 @@ import {
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { Navigate, useNavigate } from "react-router-dom";
 import { setSectionAExecutiveInitial } from "../../../slices/sectionAExecutiveSlice";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export interface ExecutiveOfficerInfo {
   authorityLim: string;
@@ -79,6 +83,16 @@ const sectionA = () => {
     setOpen(true);
   };
 
+  const schema = yup.object().shape({
+    NRICNumber: yup.string().required("NRIC Number is required"),
+    department: yup.string().required("Department is required"),
+    name: yup.string().required("Name is required"),
+    passportNumber: yup.string(),
+    position: yup.string().required("Position is required"),
+    staffId: yup.string().required("Staff ID is required"),
+    executiveOfficer: yup.string().required("This field is required"),
+  });
+
   const methods = useForm({
     defaultValues: {
       NRICNumber: "",
@@ -89,13 +103,14 @@ const sectionA = () => {
       staffId: "",
       executiveOfficer: "",
     },
+    resolver: yupResolver(schema),
+    mode: "onChange",
   });
   const {
     handleSubmit,
     control,
     watch,
-    reset,
-    formState: { errors },
+    formState: { isValid },
   } = methods;
 
   const values = watch();
@@ -208,8 +223,25 @@ const sectionA = () => {
                   rules={{ required: "" }}
                   render={({ field, fieldState: { error } }) => (
                     <>
-                      <FormControl variant="standard" sx={{ width: "100%" }}>
-                        <InputLabel id="executiveOfficer">
+                      <FormControl
+                        variant="standard"
+                        sx={{ width: "100%" }}
+                        error={!!error}
+                      >
+                        <InputLabel
+                          id="executiveOfficer"
+                          sx={{
+                            fontSize: "16px",
+                            fontWeight: "normal",
+                            "&.Mui-focused": {
+                              color: "#58595B",
+                            },
+                            "&.Mui-error": {
+                              color: "red",
+                            },
+                          }}
+                          htmlFor={`standard-${name}`}
+                        >
                           Executive Officer
                         </InputLabel>
                         <Select
@@ -239,6 +271,11 @@ const sectionA = () => {
                           <MenuItem value={"Yes"}>Yes</MenuItem>
                           <MenuItem value={"No"}>No</MenuItem>
                         </Select>
+                        {error && (
+                          <FormHelperText id="executiveOfficer">
+                            {error?.message}
+                          </FormHelperText>
+                        )}
                       </FormControl>
                       <Typography
                         sx={{ color: "#8A8A8C" }}
@@ -315,6 +352,7 @@ const sectionA = () => {
                   size="large"
                   btnText="Continue"
                   fullWidth
+                  disabled={!isValid}
                 />
               </Box>
 

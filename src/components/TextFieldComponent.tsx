@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from "react";
-
 import {
   FormControl,
   InputLabel,
@@ -49,38 +48,35 @@ const TextFieldComponent: React.FC<InputFieldProps & TextFieldProps> = ({
     <Controller
       name={name}
       control={control}
-      rules={{ required: "" }}
+      rules={{ required: "This field is required" }}
       render={({ field, fieldState: { error } }) => (
-        <FormControl variant={variant} fullWidth>
+        <FormControl variant={variant} fullWidth error={!!error}>
           <InputLabel
             sx={{
               fontSize: "16px",
               fontWeight: "normal",
               "&.Mui-focused": {
                 color: "#58595B",
-                // fontSize: "14px",
               },
               "&.Mui-error": {
                 color: "red",
               },
             }}
-            htmlFor="standard-adornment-number"
+            htmlFor={`standard-${name}`}
           >
             {label}
           </InputLabel>
-
           <Input
             {...field}
             onClick={onClick}
             sx={{
               color: "#231F20",
               fontFeatureSettings: "'clig' off, 'liga' off",
-              // fontFamily: "Maven Pro",
               fontSize: "16px",
               fontStyle: "normal",
               caretColor: "#EA0029",
               fontWeight: 700,
-              lineHeight: "22px", // You can specify the line height as a string with the desired unit
+              lineHeight: "22px",
               ...(sx && sx),
             }}
             name={name}
@@ -96,7 +92,11 @@ const TextFieldComponent: React.FC<InputFieldProps & TextFieldProps> = ({
             onFocus={onFocus}
             onBlur={onBlur}
           />
-          {error && <FormHelperText id={name}>{errorMessage}</FormHelperText>}
+          {error && (
+            <FormHelperText id={name} error>
+              {error.message}
+            </FormHelperText>
+          )}
         </FormControl>
       )}
     />
