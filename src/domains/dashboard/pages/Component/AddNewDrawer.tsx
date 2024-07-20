@@ -63,11 +63,25 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
     };
 
   const addressSchema = Yup.object().shape({
-    whichComm: Yup.string().required("Address Field is Required"),
-    isCommMember: Yup.string(),
-    authorityLim: Yup.string(),
-    creditMan: Yup.string().required("Credit man is Required"),
-    headOM: Yup.string().required("Select a State"),
+    isCommMember: Yup.string().required("This field is required"),
+
+    whichComm: Yup.string().test(
+      "conditional-required",
+      "This field is required",
+      function (value) {
+        const { isCommMember } = this.parent;
+        if (isCommMember === "Yes") {
+          if (!value || value.trim() === "") {
+            return this.createError({ message: "This field is required" });
+          }
+          return true; // Value is valid
+        }
+        return true; // Skip validation if isCommMember is not 'Yes'
+      }
+    ),
+    authorityLim: Yup.string().required("This field is required"),
+    creditMan: Yup.string().required("This field is required"),
+    headOM: Yup.string().required("This field is required"),
   });
 
   const methods = useForm({
@@ -79,6 +93,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
       headOM: executiveOfficerInfo?.headOM ?? "",
     },
     resolver: yupResolver(addressSchema),
+    mode: "onChange",
   });
 
   const {
@@ -86,7 +101,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
     control,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = methods;
 
   const values = watch();
@@ -300,6 +315,7 @@ const AddNewAddressDrawer: React.FC<NewAddressProps> = ({
                 size="large"
                 fullWidth={!setSizeBanner}
                 variant="contained"
+                disabled={!isValid}
               />
             </Box>
           </FormProvider>
