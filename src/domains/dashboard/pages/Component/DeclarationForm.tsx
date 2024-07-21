@@ -48,7 +48,7 @@ const validationSchema = Yup.object().shape({
   businessRegistrationNumber: Yup.string().required(
     "Business registration number is required"
   ),
-  oldBusinessRegistrationNumber: Yup.string().nullable(),
+  oldBusinessRegistrationNumber: Yup.string(),
   position: Yup.string().required("Position is required"),
   shareholder: Yup.string().required("Shareholder details are required"),
 });
@@ -131,12 +131,14 @@ const DeclarationForm: React.FC<NewAddressProps> = ({
       businessRegistrationNumber:
         editFormData?.businessRegistrationNumber ?? "",
       oldBusinessRegistrationNumber:
-        editFormData?.oldBusinessRegistrationNumber ?? null,
+        editFormData?.oldBusinessRegistrationNumber ?? "",
       position: editFormData?.position ?? "",
       shareholder: editFormData?.shareholder ?? "",
     }),
     [editFormData]
   );
+
+  console.log(editFormData, "editFormData");
 
   const methods = useForm({
     defaultValues,

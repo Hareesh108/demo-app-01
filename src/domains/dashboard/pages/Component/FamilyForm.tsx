@@ -43,9 +43,9 @@ type NewAddressProps = {
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full name is required"),
   nationalId: Yup.string().required("NRIC number is required"),
-  oldNationalId: Yup.string().nullable(),
-  passportNumber: Yup.string().nullable(),
-  countryCode: Yup.string().nullable(),
+  oldNationalId: Yup.string(),
+  passportNumber: Yup.string(),
+  countryCode: Yup.string(),
   name: Yup.string().required("Name is required"),
   businessRegistrationNumber: Yup.string().required(
     "Business registration number is required"
@@ -155,14 +155,14 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
     () => ({
       fullName: editFormData?.fullName ?? "",
       nationalId: editFormData?.nationalId ?? "",
-      oldNationalId: editFormData?.oldNationalId ?? null,
-      passportNumber: editFormData?.passportNumber ?? null,
-      countryCode: editFormData?.countryCode ?? null,
+      oldNationalId: editFormData?.oldNationalId ?? "",
+      passportNumber: editFormData?.passportNumber ?? "",
+      countryCode: editFormData?.countryCode ?? "",
       name: editFormData?.name ?? "",
       businessRegistrationNumber:
         editFormData?.businessRegistrationNumber ?? "",
       oldBusinessRegistrationNumber:
-        editFormData?.oldBusinessRegistrationNumber ?? null,
+        editFormData?.oldBusinessRegistrationNumber ?? "",
       position: editFormData?.position ?? "",
       shareholder: editFormData?.shareholder ?? "",
       relationship: editFormData?.relationship ?? "",

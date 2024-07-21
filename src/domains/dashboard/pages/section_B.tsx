@@ -16,15 +16,6 @@ import {
 import ConfirmDialog from "../../../components/dialog/ConfirmDialog";
 import { LoadingButton } from "@mui/lab";
 
-type newDeclarationForm = {
-  id?: string;
-  buisnRegNoOld: string;
-  buisnRegNo?: string;
-  cmpnyName?: string;
-  position?: string;
-  shareHolderDetails?: string;
-};
-
 const sectionB = () => {
   const [open, setOpen] = useState(false);
 
