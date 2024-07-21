@@ -28,6 +28,7 @@ import {
 } from "../service/section";
 import { FamilyData } from "../section_C";
 import { EmployeeBusiness } from "../../../../slices/sectionBSlice";
+import { LabelValueTypes } from "../../types";
 
 // Declare obj
 type NewAddressProps = {
@@ -77,36 +78,7 @@ const DeclarationForm: React.FC<NewAddressProps> = ({
       setOpen?.(false);
     };
 
-  const [positionList, setPositionList] = useState([
-    {
-      label: "DIRECTOR",
-      value: "Director",
-    },
-    {
-      label: "EXCUTIVE_OFFICER",
-      value: "Excutive Office",
-    },
-    {
-      label: "HEAD_OF_DEPARTMENT",
-      value: "Head Of Department",
-    },
-    {
-      label: "MANAGER",
-      value: "Manager",
-    },
-    {
-      label: "OFFICER",
-      value: "Officer",
-    },
-    {
-      label: "SHAREHOLDER",
-      value: "Shareholder",
-    },
-    {
-      label: "GUARANTOR",
-      value: "Guarantor",
-    },
-  ]);
+  const [positionList, setPositionList] = useState<LabelValueTypes>([]);
   console.log(positionList, "positionList");
 
   const getPositionTypesList = async () => {
@@ -114,99 +86,20 @@ const DeclarationForm: React.FC<NewAddressProps> = ({
       const res = await getPositionTypes();
 
       if (res?.status === 200) {
-        setPositionList(res?.data);
+        const transformedData = res?.data.map(
+          (item: { name: string; value: string }) => ({
+            label: item.name,
+            value: item.value,
+          })
+        );
+        setPositionList(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const [relationList, setRelationList] = useState([
-    {
-      label: "SF",
-      value: "Self",
-    },
-    {
-      label: "SP",
-      value: "Spouse",
-    },
-    {
-      label: "C",
-      value: "Child",
-    },
-    {
-      label: "B",
-      value: "Brother",
-    },
-    {
-      label: "BS",
-      value: "Brother's Spouse",
-    },
-    {
-      label: "SIL",
-      value: "Son-In-Law",
-    },
-    {
-      label: "F",
-      value: "Father",
-    },
-    {
-      label: "M",
-      value: "Mother",
-    },
-    {
-      label: "SC",
-      value: "Step Child",
-    },
-    {
-      label: "S",
-      value: "Sister",
-    },
-    {
-      label: "SS",
-      value: "Sister's Spouse",
-    },
-    {
-      label: "DIL",
-      value: "Daughter-In-Law",
-    },
-    {
-      label: "AC",
-      value: "Adopted Child",
-    },
-  ]);
-  console.log(relationList, "relationList");
-
-  const getRelationshipTypesList = async () => {
-    try {
-      const res = await getRelationshipTypes();
-
-      if (res?.status === 200) {
-        setRelationList(res?.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const [shareholderList, setShareholderList] = useState([
-    {
-      label: "MORE_THAN_50",
-      value: ">50%",
-    },
-    {
-      label: "BETWEEN_20_AND_50",
-      value: ">=20%, <=50%",
-    },
-    {
-      label: "LESS_THAN_20",
-      value: "<20%",
-    },
-    {
-      label: "NIL",
-      value: "NIL",
-    },
-  ]);
+  const [shareholderList, setShareholderList] = useState<LabelValueTypes>([]);
   console.log(shareholderList, "shareholderList");
 
   const getShareholderTypesList = async () => {
@@ -214,19 +107,23 @@ const DeclarationForm: React.FC<NewAddressProps> = ({
       const res = await getShareholderTypes();
 
       if (res?.status === 200) {
-        setShareholderList(res?.data);
+        const transformedData = res?.data.map(
+          (item: { name: string; value: string }) => ({
+            label: item.name,
+            value: item.value,
+          })
+        );
+        setShareholderList(transformedData);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  // useEffect(() => {
-  //   getPositionTypesList();
-  //   getRelationshipTypesList();
-  //   getShareholderTypesList();
-  // }, []);
-
+  useEffect(() => {
+    getPositionTypesList();
+    getShareholderTypesList();
+  }, []);
   // ----------------------------------------------------------------------------
   const defaultValues = useMemo(
     () => ({
@@ -288,16 +185,6 @@ const DeclarationForm: React.FC<NewAddressProps> = ({
         return [...prev, data];
       }
     });
-
-    // if (edit) {
-    //   const data = familyData.find(
-    //     (item: FamilyData) => item?.nationalId === values?.nationalId
-    //   );
-    //   setFamilyData((prev: FamilyData[]) => [...prev, data]);
-    // } else {
-    //   setFamilyData((prev: FamilyData[]) => [...prev, data]);
-    // }
-
     setOpen(false);
     toggleDrawer(false);
     setEditFormData(null);

@@ -30,7 +30,7 @@ export const getShareholderTypes = async () => {
 
 export const getPositionTypes = async () => {
   const response = await axios.get(
-    `${basePath}/connected-party/v1/positionTypes'`
+    `${basePath}/connected-party/v1/positionTypes`
   );
   return response;
 };
