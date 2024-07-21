@@ -36,6 +36,7 @@ const sectionD = () => {
   const navigate = useNavigate();
 
   const sectionCData = useAppSelector((state) => state.reducer.sectionC);
+  const sectionBData = useAppSelector((state) => state.reducer.sectionB);
 
   console.log(sectionCData, "sectionCData");
 
@@ -135,7 +136,8 @@ const sectionD = () => {
       officerAuthorityLimit: authorityLim,
       officerCreditManager: creditMan,
       officerHeadOfMarketing: headOM,
-      businesses: null,
+      businesses:
+        sectionBData[0].businessRegistrationNumber !== "" ? sectionBData : null,
       relatives: sectionCData[0].fullName !== "" ? sectionCData : null,
       createDeclaration: data?.declare,
       updateDeclaration: data?.understand,

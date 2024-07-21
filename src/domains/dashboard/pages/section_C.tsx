@@ -56,36 +56,7 @@ const sectionC = () => {
 
   console.log(editFormData, "editFormData");
 
-  const [familyData, setFamilyData] = React.useState<FamilyData[]>([
-    // {
-    //   id: "1",
-    //   fullName: "John Doe",
-    //   nationalId: "123456789",
-    //   oldNationalId: "987654321",
-    //   passportNumber: "A1234567",
-    //   countryCode: "US",
-    //   name: "Doe Enterprises",
-    //   businessRegistrationNumber: "BRN123456",
-    //   oldBusinessRegistrationNumber: "BRN654321",
-    //   position: "CEO",
-    //   shareholder: "Jane Doe",
-    //   relationship: "Spouse",
-    // },
-    // {
-    //   id: "2",
-    //   fullName: "John Doe",
-    //   nationalId: "123456789",
-    //   oldNationalId: "987654321",
-    //   passportNumber: "A1234567",
-    //   countryCode: "US",
-    //   name: "Doe Enterprises",
-    //   businessRegistrationNumber: "BRN123456",
-    //   oldBusinessRegistrationNumber: "BRN654321",
-    //   position: "CEO",
-    //   shareholder: "Jane Doe",
-    //   relationship: "Spouse",
-    // },
-  ]);
+  const [familyData, setFamilyData] = React.useState<FamilyData[]>([]);
 
   console.log(familyData, "familyData");
 
@@ -116,6 +87,7 @@ const sectionC = () => {
       (item: FamilyData) => item.nationalId !== deleteId
     );
     setFamilyData(data);
+    setDeleteConfirm(false);
     console.log(data, "data deleteRecord");
   };
 

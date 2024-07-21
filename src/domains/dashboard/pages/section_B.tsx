@@ -8,6 +8,13 @@ import DeclarationForm from "./Component/DeclarationForm";
 import { setLeftBarProgress } from "../../../slices/StepperChecklistSlice";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { useNavigate } from "react-router-dom";
+import {
+  EmployeeBusiness,
+  setSectionBData,
+  setSectionBDataInitial,
+} from "../../../slices/sectionBSlice";
+import ConfirmDialog from "../../../components/dialog/ConfirmDialog";
+import { LoadingButton } from "@mui/lab";
 
 type newDeclarationForm = {
   id?: string;
@@ -20,40 +27,64 @@ type newDeclarationForm = {
 
 const sectionB = () => {
   const [open, setOpen] = useState(false);
-  const [declaration, setDeclaration] = useState<newDeclarationForm[]>([]);
-  const [currIndex, setCurrIndex] = useState<number>();
-  const [currForm, setCurrForm] = useState<newDeclarationForm | {}>({});
+
   const [edit, setEdit] = useState<boolean>(false);
+  const [editFormData, setEditFormData] = useState<EmployeeBusiness | null>();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const updateForm = (data: any) => {
-    setEdit(false);
-    setOpen(false);
-    setCurrForm({});
-    if (currIndex !== null && currIndex !== undefined) {
-      // Create a new array with the updated value
-      const updatedDeclaration = declaration.map((item, index) =>
-        index === currIndex ? data : item
-      );
+  console.log(editFormData, "editFormData");
 
-      // Update the state with the new array
-      setDeclaration(updatedDeclaration);
-    }
+  const [familyData, setFamilyData] = React.useState<EmployeeBusiness[]>([]);
+
+  console.log(familyData, "familyData");
+
+  const editCurrentForm = async (editId: string) => {
+    const data = familyData.filter(
+      (item: EmployeeBusiness) => item.businessRegistrationNumber === editId
+    );
+    console.log(data, "data editCurrentForm");
+    setEditFormData(data[0]);
+    setEdit(true);
+    setOpen(true);
   };
 
-  const deleteForm = (data: any) => {
-    console.log(data);
+  const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [deleteRecordId, setDeleteRecordId] = React.useState("");
 
-    const updatedItems = declaration.filter((item) => item.id !== data.id);
+  const handleCancel = async () => {
+    setDeleteConfirm(false);
+  };
 
-    setDeclaration(updatedItems);
+  const openDeleteDialog = async (deleteId: string) => {
+    setDeleteConfirm(true);
+    setDeleteRecordId(deleteId);
+  };
+
+  const deleteRecord = async (deleteId: string) => {
+    const data = familyData.filter(
+      (item: EmployeeBusiness) => item.businessRegistrationNumber !== deleteId
+    );
+    setFamilyData(data);
+    setDeleteConfirm(false);
+    console.log(data, "data deleteRecord");
   };
 
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 1 }));
   }, []);
+
+  const onContinueSubmit = async () => {
+    dispatch(setSectionBDataInitial());
+    dispatch(setSectionBData(familyData));
+    navigate("/sectionC");
+  };
+
+  const onNoneOfDeclareSubmit = async () => {
+    dispatch(setSectionBDataInitial());
+    navigate("/sectionC");
+  };
 
   return (
     <>
@@ -116,18 +147,13 @@ const sectionB = () => {
             />
           </Box>
 
-          {declaration?.map((item, index) => {
+          {familyData?.map((item, index) => {
             return (
               <Box>
                 <PersonalDetailsBox
                   data={item}
-                  updateForm={(data: any) => {
-                    setCurrIndex(index);
-                    setCurrForm(data);
-                    setOpen(true);
-                    setEdit(true);
-                  }}
-                  deleteForm={(data: any) => deleteForm(data)}
+                  editCurrentForm={editCurrentForm}
+                  deleteRecord={openDeleteDialog}
                 />
               </Box>
             );
@@ -161,7 +187,7 @@ const sectionB = () => {
             }}
           >
             {/* None to declare button */}
-            {declaration?.length === 0 && (
+            {familyData?.length === 0 && (
               <Box
                 display="flex"
                 sx={{
@@ -187,16 +213,14 @@ const sectionB = () => {
                   variant="contained"
                   size="large"
                   btnText="None to Declare"
-                  onClick={() => {
-                    navigate("/sectionC");
-                  }}
+                  onClick={onNoneOfDeclareSubmit}
                   fullWidth
                 />
               </Box>
             )}
 
             {/*  */}
-            {declaration?.length > 0 && (
+            {familyData?.length > 0 && (
               <Box
                 display="flex"
                 sx={{
@@ -243,7 +267,7 @@ const sectionB = () => {
                   variant="contained"
                   size="large"
                   btnText="Continue"
-                  onClick={() => {}}
+                  onClick={onContinueSubmit}
                   fullWidth
                 />
               </Box>
@@ -251,19 +275,34 @@ const sectionB = () => {
           </Box>
         </Box>
       </Box>
-      {/* <DeclarationForm
+
+      <DeclarationForm
         open={open}
         setOpen={setOpen}
-        currentForm={currForm}
-        isEdit={edit}
-        closeDrawer={() => setOpen(false)}
-        // newAddress={declartion}
-        createForm={(val: any) => {
-          setOpen(false);
-          setDeclaration([...declaration, val]);
-        }}
-        updateConfig={updateForm}
-      /> */}
+        editFormData={editFormData!}
+        edit={edit}
+        familyData={familyData}
+        setFamilyData={setFamilyData}
+        setEditFormData={setEditFormData}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirm}
+        handleClose={() => setDeleteConfirm(false)}
+        handleSubmit={() => deleteRecord(deleteRecordId)}
+        dialogTitle="Confirm Delete?"
+        dialogDescription="Are sure want to delete this item?"
+        buttonLabel="Delete"
+        actions={
+          <LoadingButton
+            variant="outlined"
+            sx={{ borderRadius: 25, textTransform: "none" }}
+            onClick={handleCancel}
+          >
+            Cancel
+          </LoadingButton>
+        }
+      />
     </>
   );
 };

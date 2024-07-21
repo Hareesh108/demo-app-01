@@ -15,6 +15,7 @@ import StepperChecklistSlice from "../slices/StepperChecklistSlice";
 import sectionASlice from "../slices/sectionASlice";
 import sectionAExecutiveSlice from "../slices/sectionAExecutiveSlice";
 import sectionCSlice from "../slices/sectionCSlice";
+import sectionBSlice from "../slices/sectionBSlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   stepperChecklist: StepperChecklistSlice,
   sectionA: sectionASlice,
   sectionAExecutive: sectionAExecutiveSlice,
+  sectionB: sectionBSlice,
   sectionC: sectionCSlice,
 });
 

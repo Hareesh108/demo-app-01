@@ -4,25 +4,20 @@ import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutl
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Delete from "../../../../assets/svgs/trash.svg";
 import Edit from "../../../../assets/svgs/edit.svg";
+import { FamilyData } from "../section_C";
+import { getFieldValue } from "../../../../utils/functions";
+import { EmployeeBusiness } from "../../../../slices/sectionBSlice";
 
-type NewDeclarationForm = {
-  buisnRegNoOld?: string;
-  buisnRegNo?: string;
-  cmpnyName?: string;
-  position?: string;
-  shareHolderDetails?: string;
+type Props = {
+  data: EmployeeBusiness;
+  editCurrentForm: (id: string) => void;
+  deleteRecord: (id: string) => void;
 };
 
-type NewAddressProps = {
-  data: NewDeclarationForm;
-  updateForm: (data: NewDeclarationForm) => void;
-  deleteForm: (data: NewDeclarationForm) => void;
-};
-
-const PersonalDetailsBox: React.FC<NewAddressProps> = ({
+const PersonalDetailsBox: React.FC<Props> = ({
   data,
-  updateForm,
-  deleteForm
+  editCurrentForm,
+  deleteRecord,
 }) => {
   return (
     <Box
@@ -39,45 +34,43 @@ const PersonalDetailsBox: React.FC<NewAddressProps> = ({
           Company Name connected to you (if any)
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.cmpnyName}
+          {getFieldValue(data?.businessRegistrationNumber)}
         </Typography>
       </Box>
 
       <Box sx={{ mt: "16px" }}>
         <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
-          Business Registration Number
+          NRIC Number
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.buisnRegNo}
-        </Typography>
-      </Box>
-
-      {data?.buisnRegNoOld && (
-        <Box sx={{ mt: "16px" }}>
-          <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
-            Business Registration Number (Old)
-          </Typography>
-          <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-            {data?.buisnRegNoOld}
-          </Typography>
-        </Box>
-      )}
-
-      <Box sx={{ mt: "16px" }}>
-        <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
-          Position Held
-        </Typography>
-        <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.position}
+          {getFieldValue(data?.name)}
         </Typography>
       </Box>
 
       <Box sx={{ mt: "16px" }}>
         <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
-          Shareholder details in the Organisation
+          Old NRIC Number (if any)
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {data?.shareHolderDetails}
+          {getFieldValue(data?.oldBusinessRegistrationNumber)}
+        </Typography>
+      </Box>
+
+      <Box sx={{ mt: "16px" }}>
+        <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
+          Passport Number (if any)
+        </Typography>
+        <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
+          {getFieldValue(data?.position)}
+        </Typography>
+      </Box>
+
+      <Box sx={{ mt: "16px" }}>
+        <Typography fontSize={"10px"} color={"#231F20"} fontWeight={"400"}>
+          Relationship
+        </Typography>
+        <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
+          {getFieldValue(data?.shareholder)}
         </Typography>
       </Box>
 
@@ -95,15 +88,24 @@ const PersonalDetailsBox: React.FC<NewAddressProps> = ({
           }}
           edge="end"
           color="inherit"
-          aria-label="close"
-          onClick={() => updateForm(data)}
+          aria-label="edit"
+          onClick={() => {
+            editCurrentForm(data?.businessRegistrationNumber);
+          }}
         >
           <Tooltip title="Edit">
             <img src={Edit} alt="" width="100%" />
           </Tooltip>
         </IconButton>
 
-        <IconButton edge="end" color="inherit" aria-label="close" onClick={() => deleteForm(data)}>
+        <IconButton
+          edge="end"
+          color="inherit"
+          aria-label="close"
+          onClick={() => {
+            deleteRecord(data?.businessRegistrationNumber);
+          }}
+        >
           <Tooltip title="Delete">
             <img src={Delete} alt="" width="100%" />
           </Tooltip>
