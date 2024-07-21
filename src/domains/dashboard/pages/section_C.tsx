@@ -13,6 +13,8 @@ import {
   setSectionCData,
   setSectionCDataInitial,
 } from "../../../slices/sectionCSlice";
+import ConfirmDialog from "../../../components/dialog/ConfirmDialog";
+import { LoadingButton } from "@mui/lab";
 
 type newDeclarationForm = {
   id?: string;
@@ -40,17 +42,19 @@ export interface FamilyData {
 
 const sectionC = () => {
   const [open, setOpen] = useState(false);
-  const [declaration, setDeclaration] = useState<newDeclarationForm[]>([]);
-  const [currIndex, setCurrIndex] = useState<number>();
-  const [currForm, setCurrForm] = useState<newDeclarationForm | {}>({});
+
   const [edit, setEdit] = useState<boolean>(false);
+  const [editFormData, setEditFormData] = useState<FamilyData | null>();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(setLeftBarProgress({ step: 2 }));
+    setEditFormData(null);
   }, []);
+
+  console.log(editFormData, "editFormData");
 
   const [familyData, setFamilyData] = React.useState<FamilyData[]>([
     // {
@@ -84,6 +88,36 @@ const sectionC = () => {
   ]);
 
   console.log(familyData, "familyData");
+
+  const editCurrentForm = async (editId: string) => {
+    const data = familyData.filter(
+      (item: FamilyData) => item.nationalId === editId
+    );
+    console.log(data, "data editCurrentForm");
+    setEditFormData(data[0]);
+    setEdit(true);
+    setOpen(true);
+  };
+
+  const [deleteConfirm, setDeleteConfirm] = React.useState(false);
+  const [deleteRecordId, setDeleteRecordId] = React.useState("");
+
+  const handleCancel = async () => {
+    setDeleteConfirm(false);
+  };
+
+  const openDeleteDialog = async (deleteId: string) => {
+    setDeleteConfirm(true);
+    setDeleteRecordId(deleteId);
+  };
+
+  const deleteRecord = async (deleteId: string) => {
+    const data = familyData.filter(
+      (item: FamilyData) => item.nationalId !== deleteId
+    );
+    setFamilyData(data);
+    console.log(data, "data deleteRecord");
+  };
 
   const transformFamilyData = (data: FamilyData[]): Person[] => {
     return data.map((item) => ({
@@ -174,7 +208,11 @@ const sectionC = () => {
           {familyData?.map((item, index) => {
             return (
               <Box key={item?.id}>
-                <FamilyBox data={item} />
+                <FamilyBox
+                  data={item}
+                  editCurrentForm={editCurrentForm}
+                  deleteRecord={openDeleteDialog}
+                />
               </Box>
             );
           })}
@@ -207,7 +245,7 @@ const sectionC = () => {
             }}
           >
             {/* None to declare button */}
-            {declaration?.length === 0 && (
+            {familyData?.length === 0 && (
               <Box
                 display="flex"
                 sx={{
@@ -242,8 +280,7 @@ const sectionC = () => {
               </Box>
             )}
 
-            {/*  */}
-            {declaration?.length > 0 && (
+            {familyData?.length > 0 && (
               <Box
                 display="flex"
                 sx={{
@@ -301,7 +338,28 @@ const sectionC = () => {
       <FamilyInfoDrawer
         open={open}
         setOpen={setOpen}
+        editFormData={editFormData!}
+        edit={edit}
         setFamilyData={setFamilyData}
+        setEditFormData={setEditFormData}
+      />
+
+      <ConfirmDialog
+        open={deleteConfirm}
+        handleClose={() => setDeleteConfirm(false)}
+        handleSubmit={() => deleteRecord(deleteRecordId)}
+        dialogTitle="Confirm Delete?"
+        dialogDescription="Are sure want to delete this item?"
+        buttonLabel="Delete"
+        actions={
+          <LoadingButton
+            variant="outlined"
+            sx={{ borderRadius: 25, textTransform: "none" }}
+            onClick={handleCancel}
+          >
+            Cancel
+          </LoadingButton>
+        }
       />
     </>
   );

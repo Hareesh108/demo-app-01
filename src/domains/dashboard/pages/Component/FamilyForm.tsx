@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Button from "../../../../components/Button";
 import SelectInputComponent from "../../../../components/SelectInputComponent";
 import TextFieldComponent from "../../../../components/TextFieldComponent";
@@ -20,12 +26,16 @@ import {
   getRelationshipTypes,
   getShareholderTypes,
 } from "../service/section";
+import { FamilyData } from "../section_C";
 
 // Declare obj
 type NewAddressProps = {
   open?: boolean;
   setFamilyData: any;
   setOpen: any;
+  editFormData: FamilyData | null;
+  setEditFormData: Dispatch<SetStateAction<FamilyData | null | undefined>>;
+  edit: boolean;
 };
 
 const validationSchema = Yup.object().shape({
@@ -48,6 +58,9 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
   open,
   setOpen,
   setFamilyData,
+  editFormData,
+  setEditFormData,
+  edit,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
 
@@ -61,6 +74,7 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
         }
         return false;
       }
+      setEditFormData(null);
       setOpen?.(false);
     };
 
@@ -214,20 +228,28 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
   //   getShareholderTypesList();
   // }, []);
 
+  // ----------------------------------------------------------------------------
+  const defaultValues = useMemo(
+    () => ({
+      fullName: editFormData?.fullName ?? "",
+      nationalId: editFormData?.nationalId ?? "",
+      oldNationalId: editFormData?.oldNationalId ?? null,
+      passportNumber: editFormData?.passportNumber ?? null,
+      countryCode: editFormData?.countryCode ?? null,
+      name: editFormData?.name ?? "",
+      businessRegistrationNumber:
+        editFormData?.businessRegistrationNumber ?? "",
+      oldBusinessRegistrationNumber:
+        editFormData?.oldBusinessRegistrationNumber ?? null,
+      position: editFormData?.position ?? "",
+      shareholder: editFormData?.shareholder ?? "",
+      relationship: editFormData?.relationship ?? "",
+    }),
+    [editFormData]
+  );
+
   const methods = useForm({
-    defaultValues: {
-      fullName: "",
-      nationalId: "",
-      oldNationalId: null,
-      passportNumber: null,
-      countryCode: null,
-      name: "",
-      businessRegistrationNumber: "",
-      oldBusinessRegistrationNumber: null,
-      position: "",
-      shareholder: "",
-      relationship: "",
-    },
+    defaultValues,
     resolver: yupResolver(validationSchema),
     mode: "onChange",
   });
@@ -235,8 +257,18 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
   const {
     handleSubmit,
     watch,
+    reset,
     formState: { isValid },
   } = methods;
+
+  useEffect(() => {
+    if (open) {
+      reset(defaultValues);
+    }
+    if (edit) {
+      reset(defaultValues);
+    }
+  }, [open, edit]);
 
   const values = watch();
   console.log(values, "values");
@@ -246,9 +278,10 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
 
     console.log(data, "data");
 
-    setFamilyData((prev: any) => [...prev, data]);
+    setFamilyData((prev: FamilyData[]) => [...prev, data]);
     setOpen(false);
     toggleDrawer(false);
+    setEditFormData(null);
   };
 
   return (
@@ -288,6 +321,7 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
                 onClick={() => {
                   setOpen(false);
                   toggleDrawer(false);
+                  setEditFormData(null);
                 }}
               >
                 <Tooltip title="Close">

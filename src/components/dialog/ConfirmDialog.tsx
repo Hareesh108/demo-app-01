@@ -16,6 +16,8 @@ type ConfirmDialogProps = {
   dialogTitle: string;
   dialogDescription: string;
   disabled?: boolean;
+  actions?: any;
+  buttonLabel?: string;
 };
 
 const Transition = React.forwardRef(
@@ -35,6 +37,8 @@ function ConfirmDialog({
   dialogTitle,
   dialogDescription,
   disabled,
+  buttonLabel,
+  actions,
 }: ConfirmDialogProps) {
   return (
     <div>
@@ -58,9 +62,11 @@ function ConfirmDialog({
             loading={isLoading}
             variant="contained"
             onClick={handleSubmit}
+            sx={{ borderRadius: 25, textTransform: "none" }}
           >
-            Continue
+            {buttonLabel ?? "Continue"}
           </LoadingButton>
+          {actions && actions}
         </DialogActions>
       </Dialog>
     </div>

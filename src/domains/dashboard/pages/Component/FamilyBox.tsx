@@ -7,11 +7,17 @@ import Edit from "../../../../assets/svgs/edit.svg";
 import { FamilyData } from "../section_C";
 import { getFieldValue } from "../../../../utils/functions";
 
-type NewAddressProps = {
+type Props = {
   data: FamilyData;
+  editCurrentForm: (id: string) => void;
+  deleteRecord: (id: string) => void;
 };
 
-const FamilyBox: React.FC<NewAddressProps> = ({ data }) => {
+const FamilyBox: React.FC<Props> = ({
+  data,
+  editCurrentForm,
+  deleteRecord,
+}) => {
   return (
     <Box
       padding="16px"
@@ -72,7 +78,7 @@ const FamilyBox: React.FC<NewAddressProps> = ({ data }) => {
           Business Registration Number
         </Typography>
         <Typography fontSize={"14px"} color={"#231F20"} fontWeight={"700"}>
-          {getFieldValue(data?.oldBusinessRegistrationNumber)}
+          {getFieldValue(data?.businessRegistrationNumber)}
         </Typography>
       </Box>
 
@@ -117,8 +123,10 @@ const FamilyBox: React.FC<NewAddressProps> = ({ data }) => {
           }}
           edge="end"
           color="inherit"
-          aria-label="close"
-          onClick={() => {}}
+          aria-label="edit"
+          onClick={() => {
+            editCurrentForm(data?.nationalId);
+          }}
         >
           <Tooltip title="Edit">
             <img src={Edit} alt="" width="100%" />
@@ -129,7 +137,9 @@ const FamilyBox: React.FC<NewAddressProps> = ({ data }) => {
           edge="end"
           color="inherit"
           aria-label="close"
-          onClick={() => {}}
+          onClick={() => {
+            deleteRecord(data?.nationalId);
+          }}
         >
           <Tooltip title="Delete">
             <img src={Delete} alt="" width="100%" />
