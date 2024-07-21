@@ -34,6 +34,7 @@ type NewAddressProps = {
   setFamilyData: any;
   setOpen: any;
   editFormData: FamilyData | null;
+  familyData: FamilyData[];
   setEditFormData: Dispatch<SetStateAction<FamilyData | null | undefined>>;
   edit: boolean;
 };
@@ -60,6 +61,7 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
   setFamilyData,
   editFormData,
   setEditFormData,
+  familyData,
   edit,
 }) => {
   const setSizeBanner = useMediaQuery("(min-width:769px)");
@@ -278,7 +280,31 @@ const FamilyInfoDrawer: React.FC<NewAddressProps> = ({
 
     console.log(data, "data");
 
-    setFamilyData((prev: FamilyData[]) => [...prev, data]);
+    setFamilyData((prev: FamilyData[]) => {
+      const itemIndex = prev.findIndex(
+        (item: FamilyData) => item?.nationalId === values?.nationalId
+      );
+
+      if (edit && itemIndex !== -1) {
+        // If editing and the item exists, update the existing item
+        const updatedFamilyData = [...prev];
+        updatedFamilyData[itemIndex] = data;
+        return updatedFamilyData;
+      } else {
+        // If adding a new item or item does not exist, append the new data
+        return [...prev, data];
+      }
+    });
+
+    // if (edit) {
+    //   const data = familyData.find(
+    //     (item: FamilyData) => item?.nationalId === values?.nationalId
+    //   );
+    //   setFamilyData((prev: FamilyData[]) => [...prev, data]);
+    // } else {
+    //   setFamilyData((prev: FamilyData[]) => [...prev, data]);
+    // }
+
     setOpen(false);
     toggleDrawer(false);
     setEditFormData(null);

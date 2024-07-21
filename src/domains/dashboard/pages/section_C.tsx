@@ -139,10 +139,16 @@ const sectionC = () => {
     }));
   };
 
-  const onSubmit = async () => {
+  const onContinueSubmit = async () => {
     const transformedData = transformFamilyData(familyData);
     dispatch(setSectionCDataInitial());
     dispatch(setSectionCData(transformedData));
+    navigate("/sectionD");
+  };
+
+  const onNoneOfDeclareSubmit = async () => {
+    dispatch(setSectionCDataInitial());
+    navigate("/sectionD");
   };
 
   return (
@@ -271,10 +277,7 @@ const sectionC = () => {
                   variant="contained"
                   size="large"
                   btnText="None to Declare"
-                  onClick={() => {
-                    // navigate("/sectionD");
-                    onSubmit();
-                  }}
+                  onClick={onNoneOfDeclareSubmit}
                   fullWidth
                 />
               </Box>
@@ -327,7 +330,7 @@ const sectionC = () => {
                   variant="contained"
                   size="large"
                   btnText="Continue"
-                  onClick={() => {}}
+                  onClick={onContinueSubmit}
                   fullWidth
                 />
               </Box>
@@ -340,6 +343,7 @@ const sectionC = () => {
         setOpen={setOpen}
         editFormData={editFormData!}
         edit={edit}
+        familyData={familyData}
         setFamilyData={setFamilyData}
         setEditFormData={setEditFormData}
       />

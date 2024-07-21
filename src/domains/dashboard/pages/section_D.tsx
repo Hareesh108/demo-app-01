@@ -136,7 +136,7 @@ const sectionD = () => {
       officerCreditManager: creditMan,
       officerHeadOfMarketing: headOM,
       businesses: null,
-      relatives: sectionCData[0] ? sectionCData : null,
+      relatives: sectionCData[0].fullName !== "" ? sectionCData : null,
       createDeclaration: data?.declare,
       updateDeclaration: data?.understand,
       confirmDeclaration: data?.infoDeclare,
